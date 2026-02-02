@@ -12,13 +12,13 @@
   "categories": ["portfolio", "business", "design", "technology"],
   "icons": [
     {
-      "src": "/william.png",
+      "src": "/fav1.jpg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "/william-1.JPG",
+      "src": "/fav1.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any"
@@ -30,21 +30,21 @@
       "short_name": "Projects",
       "description": "View engineering projects and portfolio",
       "url": "/projects",
-      "icons": [{ "src": "/william.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/fav1.jpg", "sizes": "96x96" }]
     },
     {
       "name": "About",
       "short_name": "About",
       "description": "Learn about William Armstrong",
       "url": "/about",
-      "icons": [{ "src": "/william-1.JPG", "sizes": "96x96" }]
+      "icons": [{ "src": "/fav1.jpg", "sizes": "96x96" }]
     },
     {
       "name": "Contact",
       "short_name": "Contact",
       "description": "Get in touch",
       "url": "/contact",
-      "icons": [{ "src": "/william.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/fav1.jpg", "sizes": "96x96" }]
     }
   ]
 }

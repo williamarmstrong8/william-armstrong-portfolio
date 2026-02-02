@@ -23,9 +23,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://williamarmstrong.dev'),
   manifest: '/manifest.json',
   icons: {
-    icon: '/william.png',
-    shortcut: '/william.png',
-    apple: '/william.png',
+    icon: '/fav1.jpg',
+    shortcut: '/fav1.jpg',
+    apple: '/fav1.jpg',
   },
   appleWebApp: {
     capable: true,
