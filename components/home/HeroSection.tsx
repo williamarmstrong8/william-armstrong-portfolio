@@ -177,7 +177,9 @@ const HeroSection = () => {
               <div className="pointer-events-none absolute inset-0 rounded-full border-[6px] border-background shadow-2xl z-10" />
 
               {/* Subtle hover glow */}
-              <div className="pointer-events-none absolute inset-0 rounded-full bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
+              <div className="pointer-events-none absolute inset-0 rounded-full overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                <div className="absolute inset-0 rounded-full bg-primary/10 blur-xl" />
+              </div>
 
               {/* Decorative subtle rings */}
               <div className="pointer-events-none absolute -inset-4 border border-primary/5 rounded-full animate-[spin_20s_linear_infinite]" />
