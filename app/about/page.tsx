@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/william-1.JPG",
+        url: "/william-armstrong-og.png",
         width: 1200,
         height: 630,
         alt: "William Armstrong - Boston College Engineering Graduate",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: "About William Armstrong - Product Engineer Journey",
     description: "Boston College graduate in Human-Centered Engineering. Entrepreneur and leader passionate about building innovative solutions.",
     creator: "@williamarmstrong",
-    images: ["/william-1.JPG"],
+    images: ["/william-armstrong-og.png"],
   },
   robots: {
     index: true,

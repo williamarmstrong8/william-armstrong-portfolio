@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/photography/landscape/image1.jpg",
+        url: "/william-armstrong-og.png",
         width: 1200,
         height: 630,
         alt: "William Armstrong Photography Portfolio - Landscapes and Events",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: "Photography Portfolio - William Armstrong",
     description: "Landscape, event, and creative photography by William Armstrong. Boston College scenes, running events, and artistic captures.",
     creator: "@williamarmstrong",
-    images: ["/photography/landscape/image1.jpg"],
+    images: ["/william-armstrong-og.png"],
   },
   robots: {
     index: true,

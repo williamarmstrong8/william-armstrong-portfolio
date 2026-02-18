@@ -22,7 +22,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         givenName: 'William',
         familyName: 'Armstrong',
         description: 'Product Engineer specializing in human-centered design and entrepreneurship',
-        image: 'https://williamarmstrong.dev/william-1.JPG',
+        image: 'https://williamarmstrong.dev/william-armstrong-og.png',
         sameAs: [
           'https://www.linkedin.com/in/william-armstrong8/',
           'https://github.com/williamarmstrong8'

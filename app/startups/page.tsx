@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/modbrew_logo.svg",
+        url: "/william-armstrong-og.png",
         width: 1200,
         height: 630,
         alt: "William Armstrong Startups Portfolio",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: "Startups - William Armstrong",
     description: "Mod Brew, Happy Mile, Drifters, and Club Pack - William Armstrong's entrepreneurial ventures and startups.",
     creator: "@williamarmstrong",
-    images: ["/modbrew_logo.svg"],
+    images: ["/william-armstrong-og.png"],
   },
   robots: {
     index: true,

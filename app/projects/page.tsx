@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/projects/AI Blog Generator/home.png",
+        url: "/william-armstrong-og.png",
         width: 1200,
         height: 630,
         alt: "William Armstrong Engineering Projects Portfolio",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     title: "Engineering Projects - William Armstrong Portfolio",
     description: "AI Blog Generator, fitness apps, smart systems, and innovative engineering solutions by William Armstrong.",
     creator: "@williamarmstrong",
-    images: ["/projects/AI Blog Generator/home.png"],
+    images: ["/william-armstrong-og.png"],
   },
   robots: {
     index: true,

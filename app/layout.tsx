@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/william-1.JPG",
+        url: "/william-armstrong-og.png",
         width: 1200,
         height: 630,
         alt: "William Armstrong - Product Engineer & Entrepreneur",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     title: "William Armstrong - Product Engineer & Entrepreneur",
     description: "Portfolio of William Armstrong: Product Engineer specializing in human-centered design and innovative solutions.",
     creator: "@williamarmstrong",
-    images: ["/william-1.JPG"],
+    images: ["/william-armstrong-og.png"],
   },
   robots: {
     index: true,
