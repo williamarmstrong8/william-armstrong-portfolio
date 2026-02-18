@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -35,10 +35,13 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
   const [mediaAspectRatios, setMediaAspectRatios] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const mediaItems = [
-    ...(project?.images?.map(img => ({ type: 'image', src: img })) || []),
-    ...(project?.videos?.map(vid => ({ type: 'video', src: vid })) || [])
-  ];
+  const mediaItems = useMemo(
+    () => [
+      ...(project?.images?.map(img => ({ type: 'image' as const, src: img })) || []),
+      ...(project?.videos?.map(vid => ({ type: 'video' as const, src: vid })) || []),
+    ],
+    [project?.images, project?.videos]
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -56,7 +59,7 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
   // Reset aspect ratios when modal opens or project changes so we show skeleton until dimensions load (avoids layout shift)
   useEffect(() => {
     if (isOpen && project) setMediaAspectRatios([]);
-  }, [isOpen, project?.id]);
+  }, [isOpen, project]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {

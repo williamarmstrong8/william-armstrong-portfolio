@@ -322,7 +322,7 @@ function EngineeringCard() {
             <span className="text-purple-400">const</span> <span className="text-yellow-200">Product</span> = () ={">"} {'{'}
           </div>
           <div className="pl-4 text-neutral-400">
-            <span className="text-neutral-500">// Modern Foundations</span>
+            <span className="text-neutral-500">{'// Modern Foundations'}</span>
           </div>
           <div className="pl-4 text-ring">
             {'<'}NextImage <span className="text-neutral-400">src=</span>... {'/>'}
