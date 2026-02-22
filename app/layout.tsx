@@ -9,10 +9,10 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Use production URL for metadata so OG/twitter images always resolve to your live site
+// (VERCEL_URL is per-deployment and would make preview builds output preview URLs in meta tags)
 const baseUrl =
-  process.env.VERCEL_URL != null
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_SITE_URL ?? "https://williamarmstrong.dev";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://williamarmstrong.vercel.app";
 
 export const metadata: Metadata = {
   title: "William Armstrong - Product Engineer & Entrepreneur",
