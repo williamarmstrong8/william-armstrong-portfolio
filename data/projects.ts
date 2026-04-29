@@ -17,6 +17,39 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 21,
+    title: "The Daily Brief",
+    category: "Product",
+    date: "2026",
+    thumbnail: "/blog/podcast-thumbnail.png",
+    images: [
+      "/blog/podcast-thumbnail.png",
+      "/blog/podcast-n8n.png"
+    ],
+    description:
+      "A fully automated AI daily podcast that delivers a personalized 7am morning briefing to my inbox with weather, calendar, email priorities, engineering updates, and filtered news.",
+    longDescription:
+      "The Daily Brief is a fully automated AI podcast that delivers a personalized morning briefing to my inbox every day at 7am. Built on n8n, the workflow pulls from five live data sources in parallel: Gmail, Google Calendar, OpenWeatherMap, the Vercel blog, and Google News RSS feeds. All five streams merge into a single structured prompt that Claude uses to write one unified briefing script instead of separate summaries. The script is converted to audio with ElevenLabs and delivered to my inbox before I wake up. The result is a five minute personalized podcast covering the weather, my schedule, emails that need attention, relevant engineering content, and filtered news, with no manual input and no apps to open.",
+    technologies: [
+      "n8n",
+      "Claude",
+      "ElevenLabs",
+      "Gmail API",
+      "Google Calendar API",
+      "OpenWeatherMap API",
+      "RSS Feeds",
+      "Workflow Automation"
+    ],
+    features: [
+      "Runs automatically every day at 7am",
+      "Parallel ingestion from Gmail, Calendar, weather, Vercel blog, and Google News",
+      "Merges all sources into one structured context prompt for Claude",
+      "Generates a single personalized daily briefing script",
+      "Converts text script to podcast audio with ElevenLabs",
+      "Sends final podcast directly to inbox before the day starts"
+    ]
+  },
+  {
     id: 20,
     title: "Action Button Automation",
     category: "Product",

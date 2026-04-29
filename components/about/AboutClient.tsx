@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Briefcase } from "lucide-react";
+import { Briefcase, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import AboutCard from "@/components/AboutCard";
 import Timeline from "@/components/Timeline";
@@ -219,6 +219,12 @@ export default function AboutClient() {
             title="Work Experience"
             icon={<Briefcase className="size-8" strokeWidth={2} />}
             items={experienceItems}
+          />
+
+          <Timeline
+            title="Education"
+            icon={<GraduationCap className="size-8" strokeWidth={2} />}
+            items={educationItems}
           />
 
           <Timeline
