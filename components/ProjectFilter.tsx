@@ -8,10 +8,10 @@ interface ProjectFilterProps {
 }
 
 const ProjectFilter = ({ activeFilter, onFilterChange }: ProjectFilterProps) => {
-  const filters = ["All", "Engineering", "Demos", "Product"];
+  const filters = ["All", "Automations", "Apps & sites", "Hardware"];
 
   return (
-    <div className="flex gap-3 bg-card border border-border rounded-full p-2">
+    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 bg-card border border-border rounded-full p-2">
       {filters.map((filter) => (
         <button
           key={filter}
