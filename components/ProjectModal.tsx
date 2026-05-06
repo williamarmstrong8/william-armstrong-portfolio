@@ -6,23 +6,7 @@ import Image from "next/image";
 import { X, ExternalLink, Github, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { BLUR_DATA_URL } from "@/lib/blur";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface Project {
-  id: number;
-  title: string;
-  category: string;
-  date: string;
-  description: string;
-  longDescription?: string;
-  thumbnail?: string;
-  images?: string[];
-  videos?: string[];
-  videoPoster?: string;
-  technologies?: string[];
-  features?: string[];
-  link?: string;
-  github?: string;
-}
+import type { Project } from "@/data/projects";
 
 interface ProjectModalProps {
   isOpen: boolean;

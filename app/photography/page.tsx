@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PhotographyClient from "@/components/photography/PhotographyClient";
+import PhotographyPageFallback from "@/components/photography/PhotographyPageFallback";
+import { photos, folders, topPhotosInterleaved } from "@/lib/photography";
 
 export const metadata: Metadata = {
   title: "Photography Portfolio - William Armstrong | Landscapes, Events & Creative Shots",
@@ -8,83 +11,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/photography" },
 };
 
-const IMAGES = [
-  // 5k Run & Roll '25 (all 20)
-  { src: "/photography/5k Run & Roll '25/h-DSCF5023.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5027.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5065.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5087.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5108.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5153.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5160.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5180.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5232.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5281.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5339.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5368.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5389.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5395.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5431.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5462.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5463.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5469.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/h-DSCF5531.jpg", title: "5K Run & Roll 2025", width: 1200, height: 800, folder: "5k Run & Roll '25" },
-  { src: "/photography/5k Run & Roll '25/DSCF5534.jpg", title: "5K Run & Roll 2025", width: 800, height: 1200, folder: "5k Run & Roll '25" },
-  // 5k Run & Roll '24 (all 11)
-  { src: "/photography/5k Run & Roll '24/DSCF0112.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0121.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0127.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0140.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0149.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0151.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0157.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0170.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0190.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0606.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/5k Run & Roll '24/DSCF0643.jpg", title: "5K Run & Roll 2024", width: 1200, height: 800, folder: "5k Run & Roll '24" },
-  { src: "/photography/landscape/image1.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image2.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image3.JPG", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image4.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image5.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image6.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image7.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image8.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image10.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image11.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image12.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image13.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image14.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image15.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image16.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image17.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image18.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/landscape/image19.jpg", title: "Landscape", width: 1200, height: 800, folder: "Landscape" },
-  { src: "/photography/graduation/DSCF3263.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF3390.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF3428.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF3456.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF3640.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF3685.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF3869.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF3917.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF3948.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF3966.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF4006.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF4061.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF4426.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF4916.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF5258.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF5283.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/DSCF5434.jpg", title: "Graduation", width: 800, height: 1200, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF5928.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF5935.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF5939.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-  { src: "/photography/graduation/h-DSCF5970.jpg", title: "Graduation", width: 1200, height: 800, folder: "Graduation" },
-];
-
-const Photography = () => {
-  return <PhotographyClient images={IMAGES} />;
-};
-
-export default Photography;
+export default function PhotographyPage() {
+  return (
+    <Suspense fallback={<PhotographyPageFallback />}>
+      <PhotographyClient photos={photos} topPhotos={topPhotosInterleaved} folders={folders} />
+    </Suspense>
+  );
+}

@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/blog/api'
+import { SITE_URL } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://williamarmstrong.dev'
+  const baseUrl = SITE_URL
   const posts = getAllPosts()
   const blogPostUrls = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
@@ -10,7 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
-
   return [
     {
       url: baseUrl,

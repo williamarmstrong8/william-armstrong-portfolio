@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { siteUrl } from '@/lib/site';
 
 interface StructuredDataProps {
   type: 'website' | 'profile' | 'article' | 'portfolio';
@@ -11,8 +11,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
       '@context': 'https://schema.org',
       '@type': type === 'website' ? 'WebSite' : type === 'profile' ? 'Person' : 'CreativeWork',
       name: 'William Armstrong',
-      url: 'https://williamarmstrong.dev',
-      logo: 'https://williamarmstrong.dev/william.png',
+      url: siteUrl(),
+      logo: siteUrl('/william.png'),
     };
 
     if (type === 'profile') {
@@ -22,7 +22,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         givenName: 'William',
         familyName: 'Armstrong',
         description: 'Solutions Engineer bridging product, engineering, and business — automation, integrations, and systems thinking',
-        image: 'https://williamarmstrong.dev/william-armstrong-og.png',
+        image: siteUrl('/william-armstrong-og.png'),
         sameAs: [
           'https://www.linkedin.com/in/william-armstrong8/',
           'https://github.com/williamarmstrong8'
@@ -61,7 +61,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         description: 'Portfolio of William Armstrong: Solutions Engineer bridging product, engineering, and business. Entrepreneur and builder.',
         potentialAction: {
           '@type': 'SearchAction',
-          target: 'https://williamarmstrong.dev/search?q={search_term_string}',
+          target: siteUrl('/search?q={search_term_string}'),
           'query-input': 'required name=search_term_string'
         }
       };

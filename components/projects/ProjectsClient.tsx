@@ -6,22 +6,7 @@ import ProjectGridCard from "@/components/ProjectCard";
 import ProjectFilter from "@/components/ProjectFilter";
 import ProjectModal from "@/components/ProjectModal";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-interface Project {
-  id: number;
-  title: string;
-  category: string;
-  date: string;
-  description: string;
-  longDescription?: string;
-  thumbnail?: string;
-  images?: string[];
-  videos?: string[];
-  technologies?: string[];
-  features?: string[];
-  link?: string;
-  github?: string;
-}
+import type { Project } from "@/data/projects";
 
 interface ProjectsClientProps {
   projects: Project[];

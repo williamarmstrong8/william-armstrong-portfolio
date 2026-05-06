@@ -1,5 +1,6 @@
 export interface Project {
   id: number;
+  slug: string;
   title: string;
   category: string;
   date: string;
@@ -11,13 +12,40 @@ export interface Project {
   videoPoster?: string;
   technologies?: string[];
   features?: string[];
+  problem?: string;
+  process?: string[];
+  outcome?: string;
   link?: string;
   github?: string;
+}
+
+export function getProjectMedia(project: Project) {
+  return [
+    ...(project.images ?? []),
+    ...(project.videos ?? []),
+  ];
+}
+
+export function getProjectStack(project: Project) {
+  return project.technologies ?? [];
+}
+
+export function getProjectProblem(project: Project) {
+  return project.problem ?? project.description;
+}
+
+export function getProjectProcess(project: Project) {
+  return project.process ?? project.features ?? [];
+}
+
+export function getProjectOutcome(project: Project) {
+  return project.outcome ?? project.features?.at(-1) ?? project.longDescription ?? project.description;
 }
 
 export const projects: Project[] = [
   {
     id: 21,
+    slug: "the-daily-brief",
     title: "The Daily Brief",
     category: "Product",
     date: "2026",
@@ -51,6 +79,7 @@ export const projects: Project[] = [
   },
   {
     id: 20,
+    slug: "action-button-automation",
     title: "Action Button Automation",
     category: "Product",
     date: "2026",
@@ -77,6 +106,7 @@ export const projects: Project[] = [
   },
   {
     id: 19,
+    slug: "gtm-automation-pipeline",
     title: "GTM Automation Pipeline",
     category: "Product",
     date: "2026",
@@ -100,6 +130,7 @@ export const projects: Project[] = [
   },
   {
     id: 18,
+    slug: "armstrong-academy",
     title: "Armstrong Academy",
     category: "Product",
     date: "2026",
@@ -126,6 +157,7 @@ export const projects: Project[] = [
   },
   {
     id: 12,
+    slug: "ai-blog-generator",
     title: "AI Blog Generator",
     category: "Product",
     date: "November 2025",
@@ -154,6 +186,7 @@ export const projects: Project[] = [
   },
   {
     id: 11,
+    slug: "cora-fitness",
     title: "Cora Fitness - Hybrid Athlete Brand",
     category: "Demos",
     date: "October 2025",
@@ -184,6 +217,7 @@ export const projects: Project[] = [
   },
   {
     id: 10,
+    slug: "proof-social-health-tracker",
     title: "Proof - Social Health Tracker",
     category: "Product",
     date: "March 2025",
@@ -213,6 +247,7 @@ export const projects: Project[] = [
   },
   {
     id: 8,
+    slug: "pws-refrigeration-system",
     title: "PWS Refrigeration System",
     category: "Engineering",
     date: "September 2024",
@@ -242,6 +277,7 @@ export const projects: Project[] = [
   },
   {
     id: 7,
+    slug: "waste-management-sorting-system",
     title: "Waste Management and Sorting System",
     category: "Engineering",
     date: "March 2022",
@@ -271,6 +307,7 @@ export const projects: Project[] = [
 
   {
     id: 13,
+    slug: "advisergpt-product-launch-video",
     title: "AdviserGPT - Product Launch Video",
     category: "Demos",
     date: "Summer 2025",
@@ -305,6 +342,7 @@ export const projects: Project[] = [
 
   {
     id: 14,
+    slug: "sort-it-out-client-web-app",
     title: "Sort It Out - Client Web App",
     category: "Product",
     date: "June 2025",
@@ -343,6 +381,7 @@ export const projects: Project[] = [
 
   {
     id: 15,
+    slug: "architecture-design-modular-3d-model-system",
     title: "Architecture Design - Modular 3D Model System",
     category: "Engineering",
     date: "Summer 2024",
@@ -383,6 +422,7 @@ export const projects: Project[] = [
 
   {
     id: 16,
+    slug: "prosthetic-exoskeleton",
     title: "Prosthetic Exoskeleton",
     category: "Engineering",
     date: "Summer 2021",
@@ -419,6 +459,7 @@ export const projects: Project[] = [
 
   {
     id: 17,
+    slug: "automatic-remote-controlled-projector-system",
     title: "Automatic Remote-Controlled Projector System",
     category: "Engineering",
     date: "2020",

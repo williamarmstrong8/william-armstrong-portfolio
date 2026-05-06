@@ -6,19 +6,15 @@ import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
-
-// Use production URL for metadata so OG/twitter images always resolve to your live site
-// (VERCEL_URL is per-deployment and would make preview builds output preview URLs in meta tags)
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://williamarmstrong.vercel.app";
 
 export const metadata: Metadata = {
   title: "William Armstrong - Solutions Engineer & Entrepreneur",
   description:
     "Portfolio of William Armstrong: Solutions Engineer bridging product, engineering, and business. Entrepreneur and creative professional building practical, scalable systems.",
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL(SITE_URL),
   manifest: "/manifest.json",
   icons: {
     icon: "/fav1.jpg",
