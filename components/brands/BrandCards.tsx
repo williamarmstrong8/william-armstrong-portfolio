@@ -106,11 +106,11 @@ const BrandCards = () => {
 
                 {/* Metrics */}
                 {brand.metrics && brand.metrics.length > 0 && (
-                  <div className="flex gap-3 mt-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mt-3">
                     {brand.metrics.map((metric, idx) => (
                       <div
                         key={idx}
-                        className="flex-1 rounded-lg bg-muted/50 px-3 py-2 text-center"
+                        className="rounded-lg bg-muted/50 px-3 py-2 text-center"
                       >
                         <div className="text-base font-bold text-foreground">
                           {metric.value}
@@ -124,15 +124,15 @@ const BrandCards = () => {
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-3 mt-5 pt-2">
+                <div className="flex flex-col xs:flex-row sm:flex-row gap-2 sm:gap-3 mt-5 pt-2">
                   <a
                     href={brand.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-accent/5 transition-colors text-sm font-medium"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-accent/5 transition-colors text-sm font-medium touch-manipulation"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                     View Website
@@ -143,7 +143,7 @@ const BrandCards = () => {
                       e.stopPropagation();
                       openModal(brand);
                     }}
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium"
+                    className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium touch-manipulation"
                   >
                     Learn More
                   </button>

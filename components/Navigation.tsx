@@ -2,14 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navigation = () => {
   const pathname = usePathname();
-  const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
@@ -20,7 +19,20 @@ const Navigation = () => {
     { name: "Photography", path: "/photography" },
   ];
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  // Close sidebar on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll while sidebar is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
 
   return (
     <header className="w-full flex justify-between items-center px-4 md:px-8 pt-6 md:pt-8 pb-4 md:pb-2 relative">
@@ -40,7 +52,7 @@ const Navigation = () => {
             <Button
               variant="nav"
               size="sm"
-              className={`mx-1 ${pathname === item.path ? 'text-nav-active' : ''}`}
+              className={`mx-1 ${pathname === item.path ? "text-nav-active" : ""}`}
             >
               {item.name}
             </Button>
@@ -57,47 +69,89 @@ const Navigation = () => {
         </Link>
       </div>
 
-      {/* Mobile Navigation */}
-      {isMobile && (
-        <div className="md:hidden flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleMenu}
-            className="p-2"
-          >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </Button>
+      {/* Mobile hamburger button */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="p-2 touch-manipulation"
+          aria-label="Open menu"
+        >
+          <Menu size={22} />
+        </button>
+      </div>
 
-          {isMenuOpen && (
-            <div className="absolute top-full right-2 left-0 bg-background/95 border-b border-border shadow-lg z-50 rounded-b-lg">
-              <div className="flex flex-col p-4 space-y-2">
-                {navItems.map((item) => (
-                  <Link
+      {/* Mobile sidebar + backdrop */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMenuOpen(false)}
+            />
+
+            {/* Sidebar panel */}
+            <motion.div
+              className="fixed top-0 right-0 h-full w-[78vw] max-w-[320px] bg-background border-l border-border z-50 flex flex-col md:hidden shadow-2xl"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 280 }}
+            >
+              {/* Sidebar header */}
+              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+                  Menu
+                </span>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-1.5 hover:bg-muted rounded-full transition-colors touch-manipulation"
+                  aria-label="Close menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Nav links */}
+              <nav className="flex flex-col px-3 py-5 gap-0.5 flex-1 overflow-y-auto">
+                {navItems.map((item, index) => (
+                  <motion.div
                     key={item.name}
-                    href={item.path}
-                    onClick={() => setIsMenuOpen(false)}
+                    initial={{ opacity: 0, x: 16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.06 + index * 0.05, duration: 0.2 }}
                   >
-                    <Button
-                      variant="ghost"
-                      className={`w-full justify-start ${pathname === item.path ? 'text-nav-active bg-nav' : ''}`}
+                    <Link
+                      href={item.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors ${
+                        pathname === item.path
+                          ? "bg-primary/10 text-primary"
+                          : "text-foreground hover:bg-muted"
+                      }`}
                     >
                       {item.name}
-                    </Button>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 ))}
-                <div className="pt-2 border-t border-border">
-                  <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="connect" className="w-full">
-                      Connect
-                    </Button>
-                  </Link>
-                </div>
+              </nav>
+
+              {/* Connect button pinned to bottom */}
+              <div className="px-5 pb-10 pt-4 border-t border-border">
+                <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="connect" className="w-full">
+                    Connect
+                  </Button>
+                </Link>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

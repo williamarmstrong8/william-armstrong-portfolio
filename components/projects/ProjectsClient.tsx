@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import ProjectGridCard from "@/components/ProjectCard";
 import ProjectFilter from "@/components/ProjectFilter";
 import ProjectModal from "@/components/ProjectModal";
-import { useIsMobile } from "@/hooks/use-mobile";
 import type { Project } from "@/data/projects";
 
 interface ProjectsClientProps {
@@ -13,7 +12,6 @@ interface ProjectsClientProps {
 }
 
 const ProjectsClient = ({ projects }: ProjectsClientProps) => {
-  const isMobile = useIsMobile();
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const isInitialMount = useRef(true);
@@ -39,7 +37,7 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className={`${isMobile ? 'px-4' : 'px-20'} pt-8 pb-16`}>
+      <main className="px-4 md:px-20 pt-8 pb-16">
         {/* Page Header */}
         <motion.section
           className="text-center mb-12"
@@ -67,7 +65,7 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
 
         {/* Filter Section */}
         <motion.section
-          className={`flex ${isMobile ? 'justify-center' : 'justify-end'} mb-12`}
+          className="flex justify-center md:justify-end mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{

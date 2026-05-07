@@ -271,10 +271,10 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
         </div>
       </div>
 
-      <button onClick={prevMedia} className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-10">
+      <button onClick={prevMedia} className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 p-2.5 sm:p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-10 touch-manipulation">
         <ChevronLeft className="w-5 h-5" />
       </button>
-      <button onClick={nextMedia} className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-10">
+      <button onClick={nextMedia} className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-2.5 sm:p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-10 touch-manipulation">
         <ChevronRight className="w-5 h-5" />
       </button>
       <div className="absolute bottom-3 right-3 px-3 py-1 bg-black/50 text-white text-sm rounded-full z-10">
@@ -286,22 +286,22 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative flex flex-col bg-background border border-border rounded-3xl shadow-2xl max-w-7xl max-h-[95vh] w-full mx-4 overflow-hidden">
-        <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-border">
-          <div>
-            <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+      <div className="relative flex flex-col bg-background border border-border rounded-2xl sm:rounded-3xl shadow-2xl max-w-7xl max-h-[95svh] w-full mx-2 sm:mx-4 overflow-hidden">
+        <div className="flex-shrink-0 flex items-start justify-between p-4 sm:p-6 border-b border-border gap-3">
+          <div className="min-w-0">
+            <span className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
               {project.category}
             </span>
-            <h2 className="text-2xl font-bold text-foreground mt-1">{project.title}</h2>
-            <p className="text-sm text-muted-foreground mt-1">{project.date}</p>
+            <h2 className="text-lg sm:text-2xl font-bold text-foreground mt-1 leading-snug">{project.title}</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{project.date}</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
-            <X className="w-6 h-6" />
+          <button onClick={onClose} className="flex-shrink-0 p-2 hover:bg-muted rounded-full transition-colors touch-manipulation mt-0.5">
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto">
-          <div className="p-6 pb-12">
+          <div className="p-4 sm:p-6 pb-8 sm:pb-12">
             {mediaItems.length > 0 && (
               <div className="mb-8">
                 {mediaItems.length === 1 && mediaItems[0].type === "image" && renderSingleImage()}
@@ -312,13 +312,13 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
                 {mediaItems.length > 1 && ratiosReady && renderCarousel()}
 
                 {mediaItems.length > 1 && ratiosReady && (
-                  <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
+                  <div className="flex gap-2 mt-3 sm:mt-4 overflow-x-auto pb-1">
                     {mediaItems.map((mediaItem, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentMediaIndex(index)}
                         className={cn(
-                          "flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors relative",
+                          "flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-colors relative touch-manipulation",
                           currentMediaIndex === index ? "border-primary" : "border-border hover:border-muted-foreground"
                         )}
                       >
@@ -356,8 +356,8 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
               </div>
             )}
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
+            <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
+              <div className="lg:col-span-2 space-y-5 sm:space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold text-foreground mb-3">About This Project</h3>
                   <p className="text-muted-foreground leading-relaxed">
