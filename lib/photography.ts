@@ -46,6 +46,20 @@ function landscapeFileSeq(src: string): number | null {
   return m ? parseInt(m[1], 10) : null;
 }
 
+/** Trailing seq from graduation names: `NNN-graduation-YYYYMMDD-XXX.jpg`. */
+function graduationFileSeq(src: string): number | null {
+  const base = decodeURIComponent(src.split("/").pop() ?? "");
+  const m = base.match(/^\d{3}-graduation-\d{8}-(\d{3})\.[a-z]+$/i);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function isOriginalGraduationAspect(p: Photo): boolean {
+  return (
+    (p.width === 1920 && p.height === 1280) ||
+    (p.width === 1280 && p.height === 1920)
+  );
+}
+
 /**
  * Curated picks for the default "Top" tab (prefix index per folder rules above).
  * Film / graduation: leading `NNN-`; landscape: trailing `-NNN` before extension.
@@ -61,8 +75,14 @@ function orderTopByPickList(folderSlug: string, picks: readonly number[]): Photo
   for (const p of photos) {
     if (p.folderSlug !== folderSlug) continue;
     const key =
-      folderSlug === "landscape" ? landscapeFileSeq(p.src) : leadingSortPrefix(p.src);
-    if (key != null && picks.includes(key)) map.set(key, p);
+      folderSlug === "landscape"
+        ? landscapeFileSeq(p.src)
+        : folderSlug === "graduation"
+          ? graduationFileSeq(p.src)
+          : leadingSortPrefix(p.src);
+    if (key == null || !picks.includes(key)) continue;
+    if (folderSlug === "graduation" && !isOriginalGraduationAspect(p)) continue;
+    map.set(key, p);
   }
   return picks.map((k) => map.get(k)).filter((p): p is Photo => p != null);
 }
