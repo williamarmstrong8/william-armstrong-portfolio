@@ -1,6 +1,6 @@
 ---
 title: "I Built an AI That Knows My Day Before I Do"
-excerpt: "Every morning I was starting my day behind—not on work, but on context. So I automated a 7am briefing: email, calendar, news, and a personalized audio podcast in my inbox before I open a single app."
+excerpt: "Every morning I was starting my day behind, not on work, but on context. So I automated a 7am briefing: email, calendar, news, and a personalized audio podcast in my inbox before I open a single app."
 coverImage: "/blog/podcast-thumbnail.png"
 date: "2026-04-29T12:00:00.000Z"
 category: Product
