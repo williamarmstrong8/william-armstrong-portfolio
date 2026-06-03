@@ -1,6 +1,6 @@
 ---
 title: "I Fixed a $50k Problem in 3 Days. It Took 30 Iterations."
-excerpt: "A small business automation that looked simple turned into a lesson in legacy systems, hidden workflows, and why fast iteration matters more than the first clean solution."
+excerpt: "A small business automation that had already gone through months of scoping, meetings, and expensive invoices turned into a lesson in legacy systems, hidden workflows, and fast iteration."
 coverImage: "/blog/saving-50k-blog-image.jpg"
 date: "2026-06-02T12:00:00.000Z"
 category: Engineering
@@ -25,6 +25,10 @@ The client came to me with what seemed like a straightforward ask. They were spe
 They wanted it automated. Simple enough.
 
 It was not simple.
+
+Before I touched it, another company had already tried to solve the same problem. They scoped the project, sent emails back and forth for months, held meetings, mapped requirements, and invoiced the client tens of thousands of dollars.
+
+In the end, they still could not get it working.
 
 The first thing I learned was that the legacy software had no real API. It was a system that had been running so long it predated the expectation of integration. It was the kind of tool where the UI was the interface, where the data lived in formats that reflected 15-year-old decisions, and where any attempt to work around it had to be surgical. The team had workflows built on top of it. Habits built on top of those workflows. You could not just replace it. You had to work inside it.
 
@@ -52,7 +56,7 @@ The mistake would have been to walk in with a clean-room solution and ask them t
 
 The automation I shipped saves them roughly $50k a year in manual labor. It runs without anyone thinking about it. It required 3 days of work and more iteration cycles than I expected.
 
-The lesson is not that the problem was harder than it looked. The lesson is that the first version of the problem is never the real problem. The real problem lives in the exceptions, the workarounds, and the habits of the people who have been living with the friction long enough to stop noticing it.
+The lesson is not that the problem was harder than it looked. The lesson is that the first version of the problem is never the real problem. You can spend months trying to define it in emails and meetings, but the real problem lives in the exceptions, the workarounds, and the habits of the people who have been living with the friction long enough to stop noticing it.
 
 The only way to find it is to build, test with the actual user, and rebuild fast.
 
