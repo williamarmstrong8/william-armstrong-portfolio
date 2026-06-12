@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import PhotographyClient from "@/components/photography/PhotographyClient";
 import PhotographyPageFallback from "@/components/photography/PhotographyPageFallback";
-import { photos, folders, topPhotosInterleaved } from "@/lib/photography";
+import { photosLite, folders, topPhotosLite } from "@/lib/photography";
 
 export const metadata: Metadata = {
   title: "Photography Portfolio - William Armstrong | Landscapes, Events & Creative Shots",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function PhotographyPage() {
   return (
     <Suspense fallback={<PhotographyPageFallback />}>
-      <PhotographyClient photos={photos} topPhotos={topPhotosInterleaved} folders={folders} />
+      <PhotographyClient photos={photosLite} topPhotos={topPhotosLite} folders={folders} />
     </Suspense>
   );
 }

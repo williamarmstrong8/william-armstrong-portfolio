@@ -6,6 +6,8 @@ import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { SmoothCursor } from "@/components/ui/smooth-cursor";
+import SmoothScroll from "@/components/SmoothScroll";
 import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -52,6 +54,8 @@ export default function RootLayout({
         <StructuredData type="website" />
       </head>
       <body className={inter.className}>
+        <SmoothScroll />
+        <SmoothCursor />
         <Navigation />
         {children}
         <Footer />

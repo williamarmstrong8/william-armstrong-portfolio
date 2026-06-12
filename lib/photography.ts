@@ -26,12 +26,6 @@ export const folders: string[] = (() => {
   return [...ordered, ...rest];
 })();
 
-const folderCountsBase: Record<string, number> = (() => {
-  const counts: Record<string, number> = {};
-  for (const p of photos) counts[p.folder] = (counts[p.folder] ?? 0) + 1;
-  return counts;
-})();
-
 /** Leading sort prefix from filenames like `006-film-....jpg` (film / graduation). */
 function leadingSortPrefix(src: string): number | null {
   const base = decodeURIComponent(src.split("/").pop() ?? "");
@@ -112,41 +106,29 @@ export const topPhotosInterleaved: Photo[] = (() => {
   return out;
 })();
 
-export const folderCounts: Record<string, number> = {
-  ...folderCountsBase,
-  Top: topPhotosInterleaved.length,
+/**
+ * Client-facing shape — only the fields the gallery actually renders.
+ * Keeps build metadata (cacheKey, color, title, etc.) out of the client payload.
+ */
+export type PhotoLite = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  blurDataURL: string;
+  folder: string;
 };
 
-/**
- * Legacy: full-gallery interleave (no longer used as default tab).
- * Kept for scripts / future use.
- */
-export const allPhotosInterleaved: Photo[] = (() => {
-  const byFolder = new Map<string, Photo[]>();
-  for (const p of photos) {
-    const list = byFolder.get(p.folder) ?? [];
-    list.push(p);
-    byFolder.set(p.folder, list);
-  }
-  const order = folders;
-  const out: Photo[] = [];
-  let round = 0;
-  let more = true;
-  while (more) {
-    more = false;
-    for (const f of order) {
-      const list = byFolder.get(f);
-      if (list && round < list.length) {
-        out.push(list[round]);
-        more = true;
-      }
-    }
-    round++;
-  }
-  return out;
-})();
-
-export function photosForFilter(filter: string): Photo[] {
-  if (filter === "Top" || !filter) return topPhotosInterleaved;
-  return photos.filter((p) => p.folder === filter);
+function toLite(p: Photo): PhotoLite {
+  return {
+    src: p.src,
+    width: p.width,
+    height: p.height,
+    alt: p.alt,
+    blurDataURL: p.blurDataURL,
+    folder: p.folder,
+  };
 }
+
+export const photosLite: PhotoLite[] = photos.map(toLite);
+export const topPhotosLite: PhotoLite[] = topPhotosInterleaved.map(toLite);

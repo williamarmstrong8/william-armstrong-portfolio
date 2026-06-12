@@ -53,23 +53,22 @@ const HeroSection = () => {
 
   return (
     <main
-      ref={containerRef}
-      className={`relative min-h-screen flex flex-col items-center overflow-hidden bg-background ${
-        isMobile ? "px-6 py-16" : "px-20 py-16"
+      className={`relative min-h-screen flex flex-col items-center justify-start overflow-hidden bg-background pt-[clamp(1rem,3.5vh,2.5rem)] pb-[clamp(2rem,5vh,4rem)] ${
+        isMobile ? "px-6" : "px-20"
       }`}
     >
       {/* Header Content */}
-      <div className="w-full text-center mb-16 md:mb-24 z-10">
+      <div className="w-full text-center mb-[clamp(1.5rem,5vh,4rem)] z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="font-bold text-foreground leading-[1.1] tracking-tight text-5xl md:text-7xl lg:text-8xl xl:text-9xl px-4 md:px-8">
+          <h1 className="font-bold text-foreground leading-[1.05] tracking-tight text-[clamp(2.25rem,min(8.5vw,13vh),7.5rem)] px-4 md:px-8">
             William Armstrong
           </h1>
           <div className="max-w-3xl mx-auto">
-            <p className="text-muted-foreground mt-6 text-xl md:text-2xl lg:text-3xl font-medium italic">
+            <p className="text-muted-foreground mt-[clamp(0.5rem,2vh,1.25rem)] text-[clamp(1.0625rem,min(2.4vw,3.5vh),1.8rem)] font-medium italic">
               Engineer. Builder. Bridging product, engineering, and business.
             </p>
 
@@ -77,7 +76,7 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 1 }}
-              className="mt-10 flex flex-wrap justify-center gap-4"
+              className="mt-[clamp(1rem,3vh,2rem)] flex flex-wrap justify-center gap-4"
             >
               <Button
                 asChild
@@ -92,7 +91,7 @@ const HeroSection = () => {
       </div>
 
       {/* Diagram Section - stack vertically below lg so cards don't overlap center image */}
-      <div className="w-full max-w-7xl relative mx-auto">
+      <div ref={containerRef} className="w-full max-w-7xl relative mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-6 relative z-10 md:px-0">
           {/* Left Node: Engineering */}
           <motion.div
@@ -146,7 +145,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
-              className="relative w-48 h-48 md:w-56 md:h-56 lg:w-72 lg:h-72"
+              className="relative w-[clamp(9rem,min(22vw,28vh),18rem)] h-[clamp(9rem,min(22vw,28vh),18rem)]"
             >
               {/* Image */}
               <div className="absolute inset-0 rounded-full overflow-hidden bg-muted">

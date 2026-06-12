@@ -12,9 +12,9 @@ The system is best described as **"calm, modern editorial."** It optimizes for c
 
 Core principles:
 
-1. **Neutral, near-white canvas.** A near-white background (`hsl(0 0% 98%)`) with a deep navy foreground gives the site a soft, paper-like feel rather than the harsher pure-white/black look. Cards step *down* one shade of gray, not up — there is no shadowed "elevated" card on a dark canvas.
+1. **Neutral, near-white canvas with true-black ink.** A near-white background (`hsl(0 0% 98%)`) paired with a neutral pure-black foreground (`hsl(0 0% 0%)`) keeps the canvas soft and paper-like while the text/ink reads as a crisp, untinted black. Cards step *down* one shade of gray, not up — there is no shadowed "elevated" card on a dark canvas.
 2. **One accent color, used sparingly.** A single bright blue (`hsl(217 92% 60%)`) is reserved for: primary CTAs, the active nav pill, hover states, link accents, "tech tag" pills, decorative dots/rings, and small bursts of energy. Everything else is grayscale.
-3. **Generous radii, soft shadows.** The base radius is `1rem` (16px). Cards are `rounded-2xl` / `rounded-3xl`. Pills and CTAs are `rounded-full`. Shadows are subtle and tinted with the foreground color, not pure black.
+3. **Generous radii, soft shadows.** The base radius is `1rem` (16px). Cards are `rounded-2xl` / `rounded-3xl`. Pills and CTAs are `rounded-full`. Shadows are subtle, low-opacity neutral black (`hsl(0 0% 0% / 0.06–0.12)`).
 4. **Big type, italic accents.** Hero headlines push to `text-9xl` with tight tracking. Subtitles routinely use `italic` + `font-medium` for a slightly editorial flavor.
 5. **Motion is choreographed, not decorative.** Almost every page composes a sequenced entrance: header (~0.1s) → title (~0.2s, `scale 0.9 → 1`) → subtitle (~0.4s) → grid fade-in (~0.6s) → cards stagger from index 0.7s onward in 0.15s steps. Hover is consistent: cards lift `-y: 8` (or `-4`/`-6`), durations 200–300ms, ease `[0.25, 0.46, 0.45, 0.94]`.
 6. **Image-first cards with text beneath, not on top.** The signature card pattern is a 16:9 image card with rounded-2xl border, then plain text *below* the card (title, meta, description). No overlays, no captions over images.
@@ -34,25 +34,25 @@ All colors are defined as HSL channel triplets in `:root` and consumed via Tailw
 :root {
   /* Surfaces & text */
   --background: 0 0% 98%;        /* near-white canvas */
-  --foreground: 222 47% 11%;     /* deep navy text */
+  --foreground: 0 0% 0%;         /* true black text (neutral, no tint) */
 
   --card: 0 0% 95%;              /* card surface (a step DOWN from background) */
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 0 0% 0%;
 
   --popover: 0 0% 100%;          /* pure-white floating surfaces */
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 0 0% 0%;
 
   /* Brand */
-  --primary: 222 47% 11%;        /* primary == foreground (deep navy) */
+  --primary: 0 0% 0%;            /* primary == foreground (true black) */
   --primary-foreground: 210 40% 98%;
 
   --secondary: 210 40% 92%;
-  --secondary-foreground: 222 47% 11%;
+  --secondary-foreground: 0 0% 0%;
 
   --muted: 210 40% 92%;
-  --muted-foreground: 215 16% 47%;
+  --muted-foreground: 0 0% 45%;  /* neutral gray secondary text */
 
-  --accent: 217 32% 18%;
+  --accent: 0 0% 15%;            /* near-black hover surface (ghost/outline) */
   --accent-foreground: 210 40% 98%;
 
   --destructive: 0 84% 60%;
@@ -67,14 +67,14 @@ All colors are defined as HSL channel triplets in `:root` and consumed via Tailw
 
   /* Navigation island */
   --nav-background: 0 0% 100% / 0.1;
-  --nav-foreground: 222 47% 11%;
+  --nav-foreground: 0 0% 0%;
   --nav-active: 217 92% 60%;     /* same blue as --ring */
   --nav-active-foreground: 0 0% 100%;
   --nav-border: 0 0% 100% / 0.2;
 
   /* Hero & cards */
   --hero-background: 0 0% 98%;
-  --hero-foreground: 222 47% 11%;
+  --hero-foreground: 0 0% 0%;
   --project-card: 0 0% 100% / 0.1;
   --project-card-hover: 0 0% 100% / 0.2;
   --project-card-border: 0 0% 100% / 0.2;
@@ -84,10 +84,10 @@ All colors are defined as HSL channel triplets in `:root` and consumed via Tailw
   --gradient-hero:    linear-gradient(180deg, hsl(0 0% 98%), hsl(210 40% 96%));
   --gradient-card:    linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
 
-  /* Shadows (tinted with foreground, not pure black) */
-  --shadow-soft:   0 4px 16px hsl(222 47% 11% / 0.08);
-  --shadow-medium: 0 8px 32px hsl(222 47% 11% / 0.12);
-  --shadow-card:   0 2px  8px hsl(222 47% 11% / 0.06);
+  /* Shadows (neutral black, low opacity) */
+  --shadow-soft:   0 4px 16px hsl(0 0% 0% / 0.08);
+  --shadow-medium: 0 8px 32px hsl(0 0% 0% / 0.12);
+  --shadow-card:   0 2px  8px hsl(0 0% 0% / 0.06);
 
   /* Motion */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -113,7 +113,7 @@ Tokens are then registered in Tailwind so utilities like `bg-background`, `text-
 | Destructive         | `destructive`               | Inline errors only                                   |
 | Focus ring          | `ring`                      | Always visible, 2px, blue                            |
 
-> **Important nuance:** in this system `--primary` is *near-black*, not the brand blue. The brand blue is `--ring` / `--nav-active`. "Primary" buttons read as deep-navy filled pills; "accent" energy comes from `--ring` (blue) tints (`bg-ring/20`, `border-ring/40`, etc.).
+> **Important nuance:** in this system `--primary` is *true black* (`0 0% 0%`), not the brand blue. The brand blue is `--ring` / `--nav-active`. "Primary" buttons read as black filled pills; "accent" energy comes from `--ring` (blue) tints (`bg-ring/20`, `border-ring/40`, etc.).
 
 ### 2.2 Typography
 
@@ -187,7 +187,7 @@ Defined once via `--radius: 1rem`, then composed:
 Three named shadows + a one-off card shadow used everywhere:
 
 * `shadow-card` — on all "image cards" via the literal class:
-  `shadow-[0_2px_12px_hsl(222_47%_11%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg`
+  `shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg`
   (Note: it is hardcoded HSL because Tailwind arbitrary values don't read CSS variables in v3.)
 * `shadow-soft` — section CTAs, optional card lift
 * `shadow-medium` — modals (`shadow-2xl`)
@@ -370,7 +370,7 @@ Used by: `ProjectCard`, `PostPreview`, `BrandCards`, featured "Startups" on home
   {/* Image card */}
   <div className="relative w-full overflow-hidden rounded-2xl border border-border/80
                   bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30
-                  shadow-[0_2px_12px_hsl(222_47%_11%_/_0.08)]
+                  shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)]
                   transition-shadow duration-300 group-hover:shadow-lg
                   aspect-video">
     <Image fill placeholder="blur" blurDataURL={BLUR_DATA_URL} className="object-cover" />
@@ -679,7 +679,7 @@ Bento grid:             grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:
 
 Card image:             aspect-video rounded-2xl border border-border/80
                         bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30
-                        shadow-[0_2px_12px_hsl(222_47%_11%_/_0.08)]
+                        shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)]
                         transition-shadow duration-300 group-hover:shadow-lg
 
 Card text gap:          mt-5 flex flex-col gap-1

@@ -39,17 +39,22 @@ export default function PhotographyPageFallback() {
       aria-live="polite"
     >
       <main className="px-4 md:px-20 pt-8 pb-16">
-        <section className="text-center mb-12">
+        {/* Header is invisible but space-reserving: the real header fades in on
+            mount (like Projects), so painting it solid here would double-flash.
+            opacity-0 keeps the exact layout to avoid CLS. */}
+        <section className="text-center mb-12 opacity-0" aria-hidden>
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none mb-6">
             Photography
           </h1>
           <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
             Capturing moments, landscapes, and life&apos;s beautiful details.
           </p>
-          <span className="sr-only">Loading photography gallery</span>
         </section>
+        <span className="sr-only">Loading photography gallery</span>
 
-        <section className="flex justify-center mb-12" aria-hidden>
+        {/* Same: reserve the filter row's height, but keep it invisible so the
+            real filter bar fades in cleanly. */}
+        <section className="flex justify-center mb-12 opacity-0" aria-hidden>
           <div className="flex flex-wrap items-center justify-center gap-3 bg-card border border-border rounded-full p-2 max-w-full">
             {tabs.map((folder, i) => (
               <span
@@ -67,7 +72,10 @@ export default function PhotographyPageFallback() {
           </div>
         </section>
 
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2.5">
+        {/* Reserve approximate masonry height to limit scroll jump, but keep it
+            invisible — the real tiles fade/stagger in on mount (like Projects),
+            so solid placeholders here would double-flash. */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2.5 opacity-0" aria-hidden>
           {Array.from({ length: 12 }).map((_, i) => (
             <Skeleton
               key={i}

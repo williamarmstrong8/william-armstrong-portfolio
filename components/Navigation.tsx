@@ -46,7 +46,7 @@ const Navigation = () => {
       </div>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center bg-nav/80 backdrop-blur-md border border-nav-border rounded-full px-2 py-2 fixed left-1/2 transform -translate-x-1/2 top-6 z-50">
+      <nav className="hidden md:flex items-center bg-white/10 backdrop-blur-md backdrop-saturate-150 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full px-2 py-2 fixed left-1/2 transform -translate-x-1/2 top-6 z-50 transition-all duration-300 hover:bg-white/20 hover:border-white/30">
         {navItems.map((item) => (
           <Link key={item.name} href={item.path}>
             <Button

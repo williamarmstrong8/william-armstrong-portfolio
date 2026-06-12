@@ -10,32 +10,32 @@ import { MasonryPhotoAlbum, type Photo as RpaPhoto, type RenderImageContext } fr
 import "react-photo-album/masonry.css";
 import "yet-another-react-lightbox/styles.css";
 
-import type { Photo } from "@/lib/photography";
+import type { PhotoLite } from "@/lib/photography";
 import { cn } from "@/lib/utils";
 
 type AlbumPhoto = RpaPhoto & {
   blurDataURL: string;
   alt: string;
-  folder: string;
-  indexInFolder: number;
 };
 
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
 
 const SIZES = "(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
 
-/** Old filter URLs used `cat=Film`; collection label is now `35mm`. */
-const LEGACY_FOLDER_CAT: Record<string, string> = { Film: "35mm" };
-
-function normalizePhotoCat(raw: string | null): string | null {
-  if (!raw) return null;
-  if (raw === "All") return "Top";
-  return LEGACY_FOLDER_CAT[raw] ?? raw;
-}
+/**
+ * Canonicalizes legacy `cat` query values. A `null` target means "this is the
+ * default view, so drop the param". Used both to pick the active filter and to
+ * rewrite stale URLs (see the redirect effect below).
+ */
+const CAT_ALIASES: Record<string, string | null> = {
+  Film: "35mm",
+  All: null,
+  Top: null,
+};
 
 type Props = {
-  photos: Photo[];
-  topPhotos: Photo[];
+  photos: PhotoLite[];
+  topPhotos: PhotoLite[];
   folders: string[];
 };
 
@@ -43,36 +43,30 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  // Longer staggered entrance on first paint (like Projects); quicker stagger
+  // for subsequent filter switches.
   const isInitialMount = useRef(true);
   useEffect(() => {
     isInitialMount.current = false;
   }, []);
 
   const rawCat = searchParams.get("cat");
-  const normalizedCat = normalizePhotoCat(rawCat);
+  const resolvedCat = rawCat != null && rawCat in CAT_ALIASES ? CAT_ALIASES[rawCat] : rawCat;
   const activeFilter =
-    normalizedCat && normalizedCat !== "Top" && folders.includes(normalizedCat)
-      ? normalizedCat
-      : "Top";
+    resolvedCat && folders.includes(resolvedCat) ? resolvedCat : "Top";
   const rawI = searchParams.get("i");
   const parsedI = rawI === null ? -1 : Number.parseInt(rawI, 10);
 
   useEffect(() => {
-    if (rawCat === "Film") {
-      const next = LEGACY_FOLDER_CAT.Film;
-      if (!folders.includes(next)) return;
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("cat", next);
-      const qs = params.toString();
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-      return;
-    }
-    if (rawCat === "All" || rawCat === "Top") {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("cat");
-      const qs = params.toString();
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-    }
+    if (rawCat == null || !(rawCat in CAT_ALIASES)) return;
+    const target = CAT_ALIASES[rawCat];
+    if (target && !folders.includes(target)) return;
+    const params = new URLSearchParams(searchParams.toString());
+    if (target) params.set("cat", target);
+    else params.delete("cat");
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }, [rawCat, folders, pathname, router, searchParams]);
 
   const setQuery = useCallback(
@@ -90,7 +84,7 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
     [searchParams, pathname, router],
   );
 
-  const filtered: Photo[] = useMemo(
+  const filtered: PhotoLite[] = useMemo(
     () =>
       activeFilter === "Top"
         ? topPhotos
@@ -106,8 +100,6 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
         height: p.height,
         alt: p.alt,
         blurDataURL: p.blurDataURL,
-        folder: p.folder,
-        indexInFolder: p.indexInFolder,
         key: p.src,
       })),
     [filtered],
@@ -159,7 +151,8 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="px-4 md:px-20 pt-8 pb-16">
-        {/* Page header — matches Projects / Startups */}
+        {/* Page header — fades in like Projects. The skeleton reserves this
+            space invisibly, so the fade is the header's first appearance. */}
         <motion.section
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -214,7 +207,9 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
           />
         </motion.section>
 
-        {/* Album — filter crossfade + staggered tiles (matches Projects) */}
+        {/* Album — staggered tiles on first paint + crossfade between filters,
+            matching Projects. The skeleton reserves this space invisibly so the
+            entrance doesn't re-flash over solid placeholders. */}
         <AnimatePresence mode="wait">
           {albumPhotos.length > 0 ? (
             <motion.section
@@ -234,10 +229,7 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
                 onClick={onAlbumClick}
                 render={{
                   image: (_props, ctx) => (
-                    <NextImageSlide
-                      ctx={ctx}
-                      useLongStagger={isInitialMount.current}
-                    />
+                    <NextImageSlide ctx={ctx} useLongStagger={isInitialMount.current} />
                   ),
                 }}
               />
@@ -329,7 +321,6 @@ function NextImageSlide({
         blurDataURL={photo.blurDataURL}
         sizes={SIZES}
         priority={index < 4}
-        loading={index < 4 ? "eager" : "lazy"}
         className="block w-full h-auto"
       />
       <div

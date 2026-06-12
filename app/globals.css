@@ -9,24 +9,24 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 98%;
-    --foreground: 222 47% 11%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 95%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 222 47% 11%;
+    --primary: 0 0% 0%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 92%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary-foreground: 0 0% 0%;
 
     --muted: 210 40% 92%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 217 32% 18%;
+    --accent: 0 0% 15%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
@@ -40,13 +40,13 @@ All colors MUST be HSL.
 
     /* Portfolio specific design tokens */
     --nav-background: 0 0% 100% / 0.1;
-    --nav-foreground: 222 47% 11%;
+    --nav-foreground: 0 0% 0%;
     --nav-active: 217 92% 60%;
     --nav-active-foreground: 0 0% 100%;
     --nav-border: 0 0% 100% / 0.2;
 
     --hero-background: 0 0% 98%;
-    --hero-foreground: 222 47% 11%;
+    --hero-foreground: 0 0% 0%;
 
     --project-card: 0 0% 100% / 0.1;
     --project-card-hover: 0 0% 100% / 0.2;
@@ -58,9 +58,9 @@ All colors MUST be HSL.
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
 
     /* Shadows */
-    --shadow-soft: 0 4px 16px hsl(222 47% 11% / 0.08);
-    --shadow-medium: 0 8px 32px hsl(222 47% 11% / 0.12);
-    --shadow-card: 0 2px 8px hsl(222 47% 11% / 0.06);
+    --shadow-soft: 0 4px 16px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 8px 32px hsl(0 0% 0% / 0.12);
+    --shadow-card: 0 2px 8px hsl(0 0% 0% / 0.06);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -93,13 +93,16 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    overflow-x: hidden;
+    /* Use clip (not hidden) so position: sticky still works.
+       overflow-x: hidden would compute overflow-y to auto, turning
+       html/body into a scroll container and breaking sticky children. */
+    overflow-x: clip;
   }
 
-  /* Smooth scrolling */
+  /* Smooth scrolling is handled by Lenis (components/SmoothScroll.tsx).
+     scroll-behavior is left as auto to avoid fighting Lenis on anchor jumps. */
   html {
-    scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   /* Hide scrollbar but keep functionality */
@@ -141,4 +144,14 @@ All colors MUST be HSL.
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+/* Hide the native cursor everywhere while the smooth cursor is active.
+   Kept unlayered so it reliably overrides Tailwind's cursor utilities and
+   element defaults like `a`/`button` (cursor: pointer). */
+body.smooth-cursor-active,
+body.smooth-cursor-active *,
+body.smooth-cursor-active *::before,
+body.smooth-cursor-active *::after {
+  cursor: none !important;
 }

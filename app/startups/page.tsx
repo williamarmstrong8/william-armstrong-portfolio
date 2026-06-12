@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import BrandsClient from "@/components/brands/BrandsClient";
+import StartupsClient from "@/components/startups/StartupsClient";
+import { startups } from "@/data/startups";
 
 export const metadata: Metadata = {
   title: "Startups - William Armstrong | Mod Brew, Happy Mile, Drifters, Club Pack",
@@ -8,8 +9,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/startups" },
 };
 
-const Startups = () => {
-  return <BrandsClient />;
-};
-
-export default Startups;
+export default function Startups() {
+  return <StartupsClient startups={startups} />;
+}

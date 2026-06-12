@@ -29,11 +29,12 @@ export default function BlogPostClient({
 }: BlogPostClientProps) {
   return (
     <>
-      {/* Back link section */}
-      <section className="pt-2 pb-4">
+      {/* Sticky liquid glass back button (within content boundaries) */}
+      <section className="sticky top-6 z-50 pt-2 pb-4">
         <div className="max-w-4xl mx-auto w-full">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="inline-block"
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               duration: 0.5,
@@ -43,9 +44,9 @@ export default function BlogPostClient({
           >
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-md backdrop-saturate-150 transition-all duration-300 hover:border-white/30 hover:bg-white/20 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
               Back to Blog
             </Link>
           </motion.div>

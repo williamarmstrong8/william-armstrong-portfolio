@@ -3,18 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { brands, type Brand } from "@/data/brands";
+import { startups, type Startup } from "@/data/startups";
 import { BLUR_DATA_URL } from "@/lib/blur";
 
-const FEATURED_BRAND_NAMES = ["Club Pack", "Happy Mile Run Club", "Mod Brew"];
+const FEATURED_STARTUP_NAMES = ["Club Pack", "Happy Mile Run Club", "Mod Brew"];
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 const ProjectsSection = () => {
   const shouldReduceMotion = useReducedMotion();
-  const featuredBrands = FEATURED_BRAND_NAMES.map((name) =>
-    brands.find((b) => b.name === name)
-  ).filter((b): b is Brand => b != null);
+  const featuredStartups = FEATURED_STARTUP_NAMES.map((name) =>
+    startups.find((s) => s.name === name)
+  ).filter((s): s is Startup => s != null);
 
   return (
     <section className="py-16 px-4 md:px-20 bg-background">
@@ -37,9 +37,9 @@ const ProjectsSection = () => {
 
         {/* Startups Grid - image as card, text separate (same pattern as project cards) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {featuredBrands.map((brand, index) => (
+          {featuredStartups.map((startup, index) => (
             <motion.div
-              key={brand.name}
+              key={startup.name}
               initial={shouldReduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 24, scale: 0.98 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-20px" }}
@@ -55,11 +55,11 @@ const ProjectsSection = () => {
                 className="flex flex-col w-full text-left transform-gpu transition-[transform] duration-300 ease-out hover:-translate-y-1 group"
               >
                 {/* Image Card - distinct visual card with rounded corners and subtle styling */}
-                <div className="relative w-full overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video shadow-[0_2px_12px_hsl(222_47%_11%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg">
-                  {brand.screenshots && brand.screenshots.length > 0 ? (
+                <div className="relative w-full overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg">
+                  {startup.screenshots && startup.screenshots.length > 0 ? (
                     <Image
-                      src={brand.screenshots[0]}
-                      alt={brand.name}
+                      src={startup.screenshots[0]}
+                      alt={startup.name}
                       fill
                       sizes="(max-width: 1024px) 100vw, 33vw"
                       placeholder="blur"
@@ -70,8 +70,8 @@ const ProjectsSection = () => {
                     <div className="absolute inset-0 flex items-center justify-center p-8">
                       <div className="relative w-24 h-24 md:w-28 md:h-28">
                         <Image
-                          src={brand.logo}
-                          alt={brand.name}
+                          src={startup.logo}
+                          alt={startup.name}
                           fill
                           className="object-contain"
                           sizes="112px"
@@ -87,10 +87,10 @@ const ProjectsSection = () => {
                 {/* Text and details - separate from image card */}
                 <div className="mt-5 flex flex-col gap-1">
                   <h3 className="text-xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                    {brand.name}
+                    {startup.name}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                    {brand.description}
+                    {startup.description}
                   </p>
                   <span className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                     View startup

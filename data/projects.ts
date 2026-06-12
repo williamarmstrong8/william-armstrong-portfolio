@@ -1,4 +1,6 @@
-export interface Project {
+import type { ShowcaseSectionData } from "@/types/showcase";
+
+export interface Project extends ShowcaseSectionData {
   id: number;
   slug: string;
   title: string;
@@ -10,39 +12,60 @@ export interface Project {
   images?: string[];
   videos?: string[];
   videoPoster?: string;
-  technologies?: string[];
-  features?: string[];
-  problem?: string;
-  process?: string[];
-  outcome?: string;
   link?: string;
   github?: string;
 }
 
-export function getProjectMedia(project: Project) {
-  return [
-    ...(project.images ?? []),
-    ...(project.videos ?? []),
-  ];
-}
-
-export function getProjectStack(project: Project) {
-  return project.technologies ?? [];
-}
-
-export function getProjectProblem(project: Project) {
-  return project.problem ?? project.description;
-}
-
-export function getProjectProcess(project: Project) {
-  return project.process ?? project.features ?? [];
-}
-
-export function getProjectOutcome(project: Project) {
-  return project.outcome ?? project.features?.at(-1) ?? project.longDescription ?? project.description;
-}
-
 export const projects: Project[] = [
+  {
+    id: 22,
+    slug: "quickbooks-po-to-invoice-converter",
+    title: "PDF Purchase Order to QuickBooks Invoice Converter",
+    category: "Apps & sites",
+    date: "2026",
+    thumbnail: "/blog/saving-50k-blog-image.jpg",
+    images: [
+      "/blog/saving-50k-blog-image.jpg"
+    ],
+    description:
+      "A web app that converts PDF purchase orders into formatted Excel files ready to import into QuickBooks as invoices. It authenticates client employees, extracts and reviews PO data with AI, maps line items to the customer's QuickBooks product SKUs and customer names, flags low-confidence content for human review, and exports a clean Excel for AntSaaS to import. It saves the client hours every week and roughly $50k a year in manual labor.",
+    longDescription:
+      "This is a client web app I built to kill a slow, error-prone manual workflow: turning PDF purchase orders into QuickBooks invoices by hand. Another firm had already scoped the same project over months of meetings and tens of thousands of dollars in invoices and still could not ship it, largely because the client's legacy operations software had no real API and QuickBooks data did not map cleanly onto the PO formats. I built the working version in days by going straight to fast iteration with the actual end users. The app is deployed on Vercel and built on Next.js, with Supabase handling authentication and data so the client's employees each get secure logins. When an employee uploads a PDF purchase order, the Vercel AI SDK extracts the structured line items, quantities, customer, and pricing from the document. The app then maps each PO line item to the client's catalog of QuickBooks product SKUs and matches the buyer to the correct QuickBooks customer name, so the output speaks QuickBooks' language rather than the PO's. Anything the model is not confident about is flagged inline, and the employee can review, edit, and revise the extracted data before approving it. Once reviewed, the app exports a formatted Excel file structured exactly for AntSaaS to import into QuickBooks as an invoice. The result is a pipeline where a PDF goes in, a human verifies the ambiguous parts in seconds, and a QuickBooks-ready invoice comes out, replacing hours of copy-paste reconciliation each week.",
+    technologies: [
+      "Next.js",
+      "Vercel",
+      "Supabase",
+      "Vercel AI SDK",
+      "AntSaaS",
+      "QuickBooks",
+      "Excel Export",
+      "PDF Parsing",
+      "Authentication"
+    ],
+    features: [
+      "Secure authentication for the client's employees via Supabase",
+      "Upload PDF purchase orders and extract structured line items with the Vercel AI SDK",
+      "Map PO line items to the client's QuickBooks product SKU catalog",
+      "Match buyers to the correct QuickBooks customer names",
+      "Flags low-confidence extractions for human review",
+      "Review, edit, and revise extracted data before approval",
+      "Exports a formatted Excel file for AntSaaS to import into QuickBooks as invoices",
+      "Saves the client hours every week, roughly $50k a year in manual labor"
+    ],
+    problem:
+      "The client spent hours every week manually turning PDF purchase orders into QuickBooks invoices: reading the PO, looking up the matching product SKUs and customer names, formatting the data, and importing it. Their legacy operations software had no real API and QuickBooks data did not map cleanly onto the PO formats, and a previous firm had already burned months and tens of thousands of dollars without shipping a working solution.",
+    process: [
+      "Built on Next.js and deployed on Vercel with Supabase for auth and data",
+      "Used the Vercel AI SDK to extract structured data from PDF purchase orders",
+      "Built SKU and customer mapping against the client's QuickBooks catalog",
+      "Added confidence flagging plus a review, edit, and revision workflow for employees",
+      "Generated AntSaaS-ready Excel exports for QuickBooks invoice import",
+      "Iterated live with the client's end users to handle the real edge cases"
+    ],
+    outcome:
+      "A PDF purchase order now becomes a QuickBooks-ready invoice in minutes instead of being keyed in by hand. The app saves the client hours every week and roughly $50k a year in manual labor, and succeeded where a prior multi-month, tens-of-thousands-of-dollars effort had failed.",
+    link: "/blog/i-fixed-a-50k-problem-in-3-days"
+  },
   {
     id: 21,
     slug: "the-daily-brief",
