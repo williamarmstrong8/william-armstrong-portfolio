@@ -59,7 +59,7 @@ function isOriginalGraduationAspect(p: Photo): boolean {
  * Film / graduation: leading `NNN-`; landscape: trailing `-NNN` before extension.
  */
 const TOP_PICKS: Record<string, readonly number[]> = {
-  film: [6, 8, 10, 14, 20, 21, 22],
+  film: [6, 8, 10, 14, 18, 20, 21, 22],
   graduation: [1, 2, 4, 8, 18, 19],
   landscape: [4, 5, 13, 14, 16],
 };

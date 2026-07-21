@@ -12,9 +12,9 @@ The system is best described as **"calm, modern editorial."** It optimizes for c
 
 Core principles:
 
-1. **Neutral, near-white canvas with true-black ink.** A near-white background (`hsl(0 0% 98%)`) paired with a neutral pure-black foreground (`hsl(0 0% 0%)`) keeps the canvas soft and paper-like while the text/ink reads as a crisp, untinted black. Cards step *down* one shade of gray, not up — there is no shadowed "elevated" card on a dark canvas.
-2. **One accent color, used sparingly.** A single bright blue (`hsl(217 92% 60%)`) is reserved for: primary CTAs, the active nav pill, hover states, link accents, "tech tag" pills, decorative dots/rings, and small bursts of energy. Everything else is grayscale.
-3. **Generous radii, soft shadows.** The base radius is `1rem` (16px). Cards are `rounded-2xl` / `rounded-3xl`. Pills and CTAs are `rounded-full`. Shadows are subtle, low-opacity neutral black (`hsl(0 0% 0% / 0.06–0.12)`).
+1. **Cool near-white canvas with true-black ink.** A faintly cyan-tinted near-white background (`hsl(196 18% 98%)`) paired with a neutral pure-black foreground (`hsl(0 0% 0%)`) keeps the canvas soft and paper-like while the text/ink reads as a crisp, untinted black. Cards step *down* one shade, not up — there is no shadowed "elevated" card on a dark canvas.
+2. **One accent color, used sparingly.** A single deep blue (`hsl(225 100% 35%)`, exposed as `--ring` / `--nav-active`) is reserved for: the active nav pill, hover states, link accents, "tech tag" pills, decorative dots/rings, and small bursts of energy. Everything else is grayscale. Note `--primary` is true black, so filled CTAs read as black pills.
+3. **Sharp, flat surfaces (brutalist).** `--radius: 0` plus a global `@layer base` override force square corners and strip every shadow (including arbitrary `shadow-[…]` values). Components may still carry `rounded-*` / `shadow-*` classes for portability, but they render flat. Hover feedback comes from transforms (translate / scale) and border-color shifts, never elevation.
 4. **Big type, italic accents.** Hero headlines push to `text-9xl` with tight tracking. Subtitles routinely use `italic` + `font-medium` for a slightly editorial flavor.
 5. **Motion is choreographed, not decorative.** Almost every page composes a sequenced entrance: header (~0.1s) → title (~0.2s, `scale 0.9 → 1`) → subtitle (~0.4s) → grid fade-in (~0.6s) → cards stagger from index 0.7s onward in 0.15s steps. Hover is consistent: cards lift `-y: 8` (or `-4`/`-6`), durations 200–300ms, ease `[0.25, 0.46, 0.45, 0.94]`.
 6. **Image-first cards with text beneath, not on top.** The signature card pattern is a 16:9 image card with rounded-2xl border, then plain text *below* the card (title, meta, description). No overlays, no captions over images.
@@ -95,7 +95,7 @@ All colors are defined as HSL channel triplets in `:root` and consumed via Tailw
 }
 ```
 
-Tokens are then registered in Tailwind so utilities like `bg-background`, `text-foreground`, `border-border`, `text-primary`, `text-muted-foreground`, `bg-card`, `ring-ring`, etc. just work. Always extend Tailwind via `hsl(var(--token))` so the same classes work for light/dark.
+Tokens are then registered in Tailwind so utilities like `bg-background`, `text-foreground`, `border-border`, `text-primary`, `text-muted-foreground`, `bg-card`, `ring-ring`, etc. just work. Always extend Tailwind via `hsl(var(--token))`. The site currently ships **light-only** — there is no `.dark` token block or theme toggle. The token contract keeps a future dark theme cheap (add a `.dark :root` block), but don't sprinkle `dark:` utilities until that theme actually exists.
 
 #### Semantic role map
 
@@ -117,7 +117,7 @@ Tokens are then registered in Tailwind so utilities like `bg-background`, `text-
 
 ### 2.2 Typography
 
-* **Font family:** [Inter](https://fonts.google.com/specimen/Inter) via `next/font/google`, applied once on `<body>`. No second font.
+* **Font families:** [Inter](https://fonts.google.com/specimen/Inter) for body/UI (`--font-sans`) and [Merriweather](https://fonts.google.com/specimen/Merriweather) for editorial headings (`--font-serif`), both via `next/font/google` and applied on `<body>`. `h1`–`h3` are forced to the serif at weight 400 in `globals.css` (even when utility classes request bold), giving headings a calm editorial feel.
 * **Feature settings:** `font-feature-settings: "rlig" 1, "calt" 1` for ligatures.
 * **Tabular numbers:** `tabular-nums` is used on numeric metadata (post numbers, etc.) to keep things aligned.
 
@@ -169,7 +169,9 @@ Wrap article content in `<div className="max-w-2xl mx-auto">` for line length.
 
 ### 2.4 Border radius
 
-Defined once via `--radius: 1rem`, then composed:
+> **Live build note:** the shipped system is flat — `--radius: 0` and a global override force *all* corners square, so the `rounded-*` classes below render as `0`. The table documents the class vocabulary components still use (kept for portability); flip `--radius` and drop the override to re-enable rounding.
+
+Defined once via `--radius`, then composed:
 
 | Use                                     | Class                |
 | --------------------------------------- | -------------------- |
@@ -184,7 +186,9 @@ Defined once via `--radius: 1rem`, then composed:
 
 ### 2.5 Shadows
 
-Three named shadows + a one-off card shadow used everywhere:
+> **Live build note:** shadows are globally disabled in the shipped build (flat brutalist look). The vocabulary below is retained in markup for portability but renders as `none`; remove the global override and restore the `--shadow-*` tokens to re-enable elevation.
+
+Three named shadows + a one-off card shadow (when enabled):
 
 * `shadow-card` — on all "image cards" via the literal class:
   `shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg`

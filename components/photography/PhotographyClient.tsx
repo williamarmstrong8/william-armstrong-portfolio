@@ -22,6 +22,11 @@ const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: fals
 
 const SIZES = "(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
 
+/** Per-photo cursor quips, keyed by src. */
+const PHOTO_QUIPS: Record<string, string> = {
+  "/photography/film/018-film-20260506-017.jpg": "so pretty!",
+};
+
 /**
  * Canonicalizes legacy `cat` query values. A `null` target means "this is the
  * default view, so drop the param". Used both to pick the active filter and to
@@ -158,9 +163,9 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.6,
+            duration: 0.4,
             ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.1,
+            delay: 0.07,
           }}
         >
           <motion.h1
@@ -168,25 +173,13 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: 0.7,
+              duration: 0.47,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.2,
+              delay: 0.13,
             }}
           >
             Photography
           </motion.h1>
-          <motion.p
-            className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.4,
-            }}
-          >
-            Capturing moments, landscapes, and life&apos;s beautiful details.
-          </motion.p>
         </motion.section>
 
         {/* Filter — same shell as ProjectFilter, centered */}
@@ -195,9 +188,9 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.5,
+            duration: 0.33,
             ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.4,
+            delay: 0.27,
           }}
         >
           <PhotoFilterBar
@@ -266,22 +259,27 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
                   renderW = renderH * ratio;
                 }
                 return (
-                  <Image
-                    src={slide.src!}
-                    alt={slide.alt ?? ""}
-                    width={Math.round(renderW)}
-                    height={Math.round(renderH)}
-                    placeholder="blur"
-                    blurDataURL={(slide as { blurDataURL?: string }).blurDataURL}
-                    sizes="92vw"
-                    quality={90}
-                    priority
-                    style={{
-                      maxWidth: "92vw",
-                      maxHeight: "92vh",
-                      objectFit: "contain",
-                    }}
-                  />
+                  <div
+                    style={{ display: "contents" }}
+                    data-cursor-quip={slide.src ? PHOTO_QUIPS[slide.src] : undefined}
+                  >
+                    <Image
+                      src={slide.src!}
+                      alt={slide.alt ?? ""}
+                      width={Math.round(renderW)}
+                      height={Math.round(renderH)}
+                      placeholder="blur"
+                      blurDataURL={(slide as { blurDataURL?: string }).blurDataURL}
+                      sizes="92vw"
+                      quality={90}
+                      priority
+                      style={{
+                        maxWidth: "92vw",
+                        maxHeight: "92vh",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
                 );
               },
             }}
@@ -302,13 +300,14 @@ function NextImageSlide({
   const { photo, width, height, index } = ctx;
   return (
     <motion.div
+      data-cursor-quip={PHOTO_QUIPS[photo.src]}
       className="group relative w-full h-full overflow-hidden rounded-lg bg-muted"
       initial={{ opacity: 0, y: 40, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -12, scale: 0.98, transition: { duration: 0.2 } }}
       transition={{
-        duration: 0.6,
-        delay: useLongStagger ? 0.7 + index * 0.15 : 0.2 + index * 0.08,
+        duration: 0.4,
+        delay: useLongStagger ? 0.47 + index * 0.1 : 0.13 + index * 0.053,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
     >
@@ -355,7 +354,7 @@ function PhotoFilterBar({
               "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
               isActive
                 ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                : "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
             )}
           >
             {folder}

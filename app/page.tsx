@@ -1,6 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import WhatIBuild from "@/components/home/WhatIBuild";
-import ProjectsSection from "@/components/ProjectsSection";
+import FeaturedStartups from "@/components/home/FeaturedStartups";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-hero text-hero-foreground">
       <HeroSection />
       <WhatIBuild />
-      <ProjectsSection />
+      <FeaturedStartups />
     </div>
   );
 }

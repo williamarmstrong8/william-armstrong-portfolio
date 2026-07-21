@@ -5,12 +5,13 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { startups, type Startup } from "@/data/startups";
 import { BLUR_DATA_URL } from "@/lib/blur";
+import { startupQuips } from "@/lib/cursorQuips";
 
 const FEATURED_STARTUP_NAMES = ["Club Pack", "Happy Mile Run Club", "Mod Brew"];
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
-const ProjectsSection = () => {
+const FeaturedStartups = () => {
   const shouldReduceMotion = useReducedMotion();
   const featuredStartups = FEATURED_STARTUP_NAMES.map((name) =>
     startups.find((s) => s.name === name)
@@ -25,7 +26,7 @@ const ProjectsSection = () => {
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.6, ease, delay: shouldReduceMotion ? 0 : 0.1 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease, delay: shouldReduceMotion ? 0 : 0.07 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Featured Startups
@@ -44,14 +45,15 @@ const ProjectsSection = () => {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-20px" }}
               transition={{
-                duration: shouldReduceMotion ? 0 : 0.5,
+                duration: shouldReduceMotion ? 0 : 0.33,
                 ease,
-                delay: shouldReduceMotion ? 0 : 0.2 + index * 0.1,
+                delay: shouldReduceMotion ? 0 : 0.13 + index * 0.067,
               }}
               whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { duration: 0.2 } }}
             >
               <Link
-                href="/startups"
+                href={`/startups/${startup.slug}`}
+                data-cursor-quip={startupQuips[startup.slug]}
                 className="flex flex-col w-full text-left transform-gpu transition-[transform] duration-300 ease-out hover:-translate-y-1 group"
               >
                 {/* Image Card - distinct visual card with rounded corners and subtle styling */}
@@ -110,7 +112,7 @@ const ProjectsSection = () => {
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-20px" }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.5, ease, delay: shouldReduceMotion ? 0 : 0.5 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.33, ease, delay: shouldReduceMotion ? 0 : 0.33 }}
         >
           <Link
             href="/startups"
@@ -127,4 +129,4 @@ const ProjectsSection = () => {
   );
 };
 
-export default ProjectsSection;
+export default FeaturedStartups;

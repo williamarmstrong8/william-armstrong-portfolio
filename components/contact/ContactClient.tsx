@@ -9,6 +9,7 @@ const contactMethods = [
     title: "Email",
     description: "Get in touch directly via email",
     value: "williamarmstrong8@gmail.com",
+    cursorQuip: "2-3 days",
     icon: (
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -20,6 +21,7 @@ const contactMethods = [
     title: "X",
     description: "Connect with me on X",
     value: "armstrongwill8",
+    cursorQuip: "just follow",
     icon: (
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -31,6 +33,7 @@ const contactMethods = [
     title: "LinkedIn",
     description: "Connect with me professionally",
     value: "linkedin.com/in/william-armstrong8",
+    cursorQuip: "few hours",
     icon: (
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -42,6 +45,7 @@ const contactMethods = [
     title: "GitHub",
     description: "View my code and projects",
     value: "github.com/williamarmstrong8",
+    cursorQuip: "cool projects :)",
     icon: (
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -61,9 +65,9 @@ export default function ContactClient() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.6,
+            duration: 0.4,
             ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.1,
+            delay: 0.07,
           }}
         >
           <motion.h1
@@ -71,25 +75,13 @@ export default function ContactClient() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: 0.7,
+              duration: 0.47,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.2,
+              delay: 0.13,
             }}
           >
             Contact
           </motion.h1>
-          <motion.p
-            className="text-xl text-muted-foreground max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.4,
-            }}
-          >
-            Let&apos;s connect and build something amazing together.
-          </motion.p>
         </motion.section>
 
         {/* Contact Methods */}
@@ -98,14 +90,15 @@ export default function ContactClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
-            duration: 0.3,
-            delay: 0.6,
+            duration: 0.2,
+            delay: 0.4,
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {contactMethods.map((method, index) => (
               <motion.div
                 key={index}
+                data-cursor-quip={method.cursorQuip}
                 className="bg-card border border-border rounded-xl p-6 text-center hover:shadow-lg transition-shadow"
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{
@@ -113,8 +106,8 @@ export default function ContactClient() {
                   y: 0,
                   scale: 1,
                   transition: {
-                    duration: 0.4,
-                    delay: 0.7 + index * 0.1,
+                    duration: 0.27,
+                    delay: 0.47 + index * 0.067,
                     ease: [0.25, 0.46, 0.45, 0.94],
                   },
                 }}
@@ -150,9 +143,9 @@ export default function ContactClient() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.5,
+              duration: 0.33,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 1.2,
+              delay: 0.8,
             }}
           >
             <div className="bg-card border border-border rounded-3xl p-12 max-w-2xl mx-auto">

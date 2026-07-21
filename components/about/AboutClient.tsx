@@ -78,6 +78,13 @@ export default function AboutClient() {
   // Experience timeline data (keep + render)
   const experienceItems = [
     {
+      title: "Vercel",
+      subtitle: "Solutions Architect",
+      date: "2026 – Present",
+      description:
+        "Partnering with customers to design and ship production systems on the Vercel platform: architecture guidance, integrations, and workflows that connect product, engineering, and business outcomes.",
+    },
+    {
       title: "AdviserGPT",
       subtitle: "Solutions Engineer",
       date: "May 2025 – Present",
@@ -134,9 +141,9 @@ export default function AboutClient() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.6,
+            duration: 0.4,
             ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.1,
+            delay: 0.07,
           }}
         >
           <motion.h1
@@ -144,27 +151,13 @@ export default function AboutClient() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: 0.7,
+              duration: 0.47,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.2,
+              delay: 0.13,
             }}
           >
             About Me
           </motion.h1>
-          <motion.p
-            className="text-xl text-muted-foreground mt-6 max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.4,
-            }}
-          >
-            Solutions-minded engineer who bridges product, engineering, and business.
-            Automation, integrations, and systems that make complex things simple.
-            Human-centered, systems-first, with a bias toward shipping and iteration.
-          </motion.p>
         </motion.section>
 
         {/* About Cards (unchanged) */}
@@ -173,8 +166,8 @@ export default function AboutClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
-            duration: 0.3,
-            delay: 0.6,
+            duration: 0.2,
+            delay: 0.4,
           }}
         >
           {aboutCards.map((card, index) => (
@@ -186,8 +179,8 @@ export default function AboutClient() {
                 y: 0,
                 scale: 1,
                 transition: {
-                  duration: 0.4,
-                  delay: 0.7 + index * 0.1,
+                  duration: 0.27,
+                  delay: 0.47 + index * 0.067,
                   ease: [0.25, 0.46, 0.45, 0.94],
                 },
               }}
@@ -211,8 +204,8 @@ export default function AboutClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
-            duration: 0.3,
-            delay: 0.9,
+            duration: 0.2,
+            delay: 0.6,
           }}
         >
           <Timeline
@@ -249,9 +242,9 @@ export default function AboutClient() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.5,
+            duration: 0.33,
             ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 1.8,
+            delay: 1.2,
           }}
         >
           <motion.div
@@ -259,9 +252,9 @@ export default function AboutClient() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: 0.4,
+              duration: 0.27,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 1.9,
+              delay: 1.27,
             }}
             whileHover={{
               scale: 1.02,
@@ -273,9 +266,9 @@ export default function AboutClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.4,
+                duration: 0.27,
                 ease: [0.25, 0.46, 0.45, 0.94],
-                delay: 2.0,
+                delay: 1.33,
               }}
             >
               Let&apos;s Work Together
@@ -285,9 +278,9 @@ export default function AboutClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.4,
+                duration: 0.27,
                 ease: [0.25, 0.46, 0.45, 0.94],
-                delay: 2.1,
+                delay: 1.4,
               }}
             >
               I&apos;m always interested in new opportunities, collaborations, and
@@ -298,9 +291,9 @@ export default function AboutClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.4,
+                duration: 0.27,
                 ease: [0.25, 0.46, 0.45, 0.94],
-                delay: 2.2,
+                delay: 1.47,
               }}
             >
               <Link href="/contact">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import DateFormatter from "./DateFormatter";
 import { BLUR_DATA_URL } from "@/lib/blur";
+import { blogQuips } from "@/lib/cursorQuips";
 
 type Props = {
   title: string;
@@ -32,6 +33,7 @@ export default function PostPreview({
     <article className="group flex flex-col">
       <Link
         href={`/blog/${slug}`}
+        data-cursor-quip={blogQuips[slug]}
         className="flex flex-col w-full text-left transform-gpu transition-[transform] duration-300 ease-out hover:-translate-y-1"
       >
         {/* Image Card - distinct visual card, same style as project/startup cards */}

@@ -22,7 +22,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         givenName: 'William',
         familyName: 'Armstrong',
         description: 'Solutions Engineer bridging product, engineering, and business — automation, integrations, and systems thinking',
-        image: siteUrl('/william-armstrong-og.png'),
+        image: siteUrl('/william.png'),
         sameAs: [
           'https://www.linkedin.com/in/william-armstrong8/',
           'https://github.com/williamarmstrong8'
@@ -59,11 +59,33 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         ...baseData,
         '@type': 'WebSite',
         description: 'Portfolio of William Armstrong: Solutions Engineer bridging product, engineering, and business. Entrepreneur and builder.',
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: siteUrl('/search?q={search_term_string}'),
-          'query-input': 'required name=search_term_string'
-        }
+      };
+    }
+
+    if (type === 'article' && data) {
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: data.title,
+        description: data.excerpt,
+        image: data.image ? siteUrl(data.image) : siteUrl('/william.png'),
+        datePublished: data.date,
+        dateModified: data.date,
+        url: data.url ? siteUrl(data.url) : siteUrl(),
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': data.url ? siteUrl(data.url) : siteUrl(),
+        },
+        author: {
+          '@type': 'Person',
+          name: 'William Armstrong',
+          url: siteUrl(),
+        },
+        publisher: {
+          '@type': 'Person',
+          name: 'William Armstrong',
+          url: siteUrl(),
+        },
       };
     }
 

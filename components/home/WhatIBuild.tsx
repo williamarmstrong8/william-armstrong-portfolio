@@ -32,7 +32,7 @@ function ExecutionCard() {
           <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Velocity</span>
         </div>
         <h3 className="text-2xl font-medium text-foreground leading-tight">Signal to Solution</h3>
-        <p className="text-neutral-500 dark:text-muted-foreground text-sm mt-3 leading-relaxed">
+        <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
         End-to-end technical workflows that turn raw inputs into actionable outcomes. Intake → webhook → enrichment → classification → the right team gets context, not just data.
         </p>
       </div>
@@ -146,7 +146,6 @@ function ExecutionCard() {
         </div>
       </div>
 
-      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-ring/20 rounded-full blur-3xl opacity-50 pointer-events-none" aria-hidden="true" />
     </div>
   );
 }
@@ -373,8 +372,8 @@ const WhatIBuild = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: shouldReduceMotion ? 0 : 0.5,
-        staggerChildren: shouldReduceMotion ? 0 : 0.1,
+        duration: shouldReduceMotion ? 0 : 0.33,
+        staggerChildren: shouldReduceMotion ? 0 : 0.067,
       },
     },
   };
@@ -384,7 +383,7 @@ const WhatIBuild = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: shouldReduceMotion ? 0 : 0.4 },
+      transition: { duration: shouldReduceMotion ? 0 : 0.27 },
     },
     hover: {
       y: shouldReduceMotion ? 0 : -4,

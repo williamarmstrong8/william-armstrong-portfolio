@@ -1,24 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Post } from "@/interfaces/post";
-import BlogFilter from "./BlogFilter";
 import MoreStories from "./MoreStories";
 
 interface BlogClientProps {
   posts: Post[];
-  categories: string[];
 }
 
-export default function BlogClient({ posts, categories }: BlogClientProps) {
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  const filteredPosts =
-    activeFilter === "All"
-      ? posts
-      : posts.filter((post) => post.category === activeFilter);
-
+export default function BlogClient({ posts }: BlogClientProps) {
   return (
     <>
       {/* Page Header */}
@@ -27,9 +17,9 @@ export default function BlogClient({ posts, categories }: BlogClientProps) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.6,
+          duration: 0.4,
           ease: [0.25, 0.46, 0.45, 0.94],
-          delay: 0.1,
+          delay: 0.07,
         }}
       >
         <motion.h1
@@ -37,64 +27,24 @@ export default function BlogClient({ posts, categories }: BlogClientProps) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
-            duration: 0.7,
+            duration: 0.47,
             ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.2,
+            delay: 0.13,
           }}
         >
           Blog
         </motion.h1>
-        <motion.p
-          className="text-xl text-muted-foreground mt-6 max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.5,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.4,
-          }}
-        >
-          Thoughts on my building process and what I learn along the way.
-        </motion.p>
       </motion.section>
-
-      {/* Filter Section - coded out until we have enough content to warrant it */}
-      {/* <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.5,
-          ease: [0.25, 0.46, 0.45, 0.94],
-          delay: 0.4,
-        }}
-      >
-        <BlogFilter
-          categories={categories}
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
-      </motion.div> */}
 
       {/* Posts Grid - same pattern as Startups/Projects: section then cards animate in order */}
       {posts.length > 0 ? (
-        filteredPosts.length > 0 ? (
-          <MoreStories posts={filteredPosts} />
-        ) : (
-          <motion.p
-            className="text-muted-foreground text-center py-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            No posts found in this category.
-          </motion.p>
-        )
+        <MoreStories posts={posts} />
       ) : (
         <motion.p
           className="text-muted-foreground text-center py-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.33, delay: 0.33 }}
         >
           No posts yet. Check back soon.
         </motion.p>

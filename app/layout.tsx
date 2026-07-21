@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Inter } from "next/font/google";
+import { Inter, Merriweather } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import SmoothScroll from "@/components/SmoothScroll";
+import ContentCursor from "@/components/ui/ContentCursor";
 import { SITE_URL } from "@/lib/site";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const merriweather = Merriweather({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["300", "400", "700"],
+});
 
 export const metadata: Metadata = {
   title: "William Armstrong - Solutions Engineer & Entrepreneur",
@@ -53,9 +61,9 @@ export default function RootLayout({
       <head>
         <StructuredData type="website" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${merriweather.variable} font-sans`}>
         <SmoothScroll />
-        <SmoothCursor />
+        <ContentCursor />
         <Navigation />
         {children}
         <Footer />

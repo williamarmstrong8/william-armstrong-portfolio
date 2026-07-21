@@ -64,8 +64,8 @@ const TimelineItem = ({ item, index }: { item: TimelineItem; index: number }) =>
       initial={{ opacity: 0, x: -30 }}
       animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
       transition={{
-        duration: 0.5,
-        delay: index * 0.1,
+        duration: 0.33,
+        delay: index * 0.067,
         ease: [0.25, 0.46, 0.45, 0.94]
       }}
     >

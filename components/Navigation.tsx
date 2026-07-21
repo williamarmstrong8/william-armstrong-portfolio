@@ -11,6 +11,9 @@ const Navigation = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Slug/detail pages (e.g. /startups/foo) shouldn't have a sticky nav.
+  const isSlugPage = /^\/(startups|projects|blog)\/[^/]+$/.test(pathname);
+
   const navItems = [
     { name: "About", path: "/about" },
     { name: "Projects", path: "/projects" },
@@ -39,14 +42,18 @@ const Navigation = () => {
       <div className="flex items-center space-x-2">
         <Link href="/" className="hover:opacity-80 transition-opacity">
           <div>
-            <h1 className="text-xl md:text-3xl font-bold text-foreground">William Armstrong</h1>
-            <p className="text-muted-foreground text-xs md:text-base">Engineer & Entrepreneur</p>
+            <span className="font-serif tracking-tight text-xl md:text-2xl text-foreground leading-none block">
+              William Armstrong
+            </span>
+            <p className="text-muted-foreground text-xs md:text-sm mt-0.5">
+              Engineer & Entrepreneur
+            </p>
           </div>
         </Link>
       </div>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center bg-white/10 backdrop-blur-md backdrop-saturate-150 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full px-2 py-2 fixed left-1/2 transform -translate-x-1/2 top-6 z-50 transition-all duration-300 hover:bg-white/20 hover:border-white/30">
+      <nav className={`hidden md:flex items-center bg-nav/80 backdrop-blur-md px-2 py-2 left-1/2 transform -translate-x-1/2 top-6 z-50 ${isSlugPage ? "absolute" : "fixed"}`}>
         {navItems.map((item) => (
           <Link key={item.name} href={item.path}>
             <Button

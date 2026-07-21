@@ -29,29 +29,27 @@ export default function BlogPostClient({
 }: BlogPostClientProps) {
   return (
     <>
-      {/* Sticky liquid glass back button (within content boundaries) */}
-      <section className="sticky top-6 z-50 pt-2 pb-4">
-        <div className="max-w-4xl mx-auto w-full">
-          <motion.div
-            className="inline-block"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.1,
-            }}
+      {/* Sticky back button — w-fit so it never covers the fixed center nav */}
+      <div className="sticky top-6 z-40 mb-6 w-fit">
+        <motion.div
+          className="inline-block"
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.33,
+            ease: [0.25, 0.46, 0.45, 0.94],
+            delay: 0.07,
+          }}
+        >
+          <Link
+            href="/blog"
+            className="group inline-flex items-center gap-2 rounded-full bg-nav/80 backdrop-blur-md border border-nav-border px-4 py-2 text-sm font-medium text-nav-foreground transition-all duration-300 hover:text-muted-foreground"
           >
-            <Link
-              href="/blog"
-              className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-md backdrop-saturate-150 transition-all duration-300 hover:border-white/30 hover:bg-white/20 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
-            >
-              <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-              Back to Blog
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+            <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
+            Back to Blog
+          </Link>
+        </motion.div>
+      </div>
 
       {/* Article content */}
       <article className="pt-6 pb-12 md:pb-16 w-full">
@@ -69,9 +67,9 @@ export default function BlogPostClient({
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.5,
+              duration: 0.33,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.5,
+              delay: 0.33,
             }}
           >
             <PostBody content={content} />
