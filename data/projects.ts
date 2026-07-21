@@ -16,6 +16,36 @@ export interface Project extends ShowcaseSectionData {
   github?: string;
 }
 
+/** The layout strategy a project page uses, derived from its content. */
+export type ProjectShape = "narrative" | "showcase" | "spotlight";
+
+/**
+ * Infers how a project page should be structured from the data it has:
+ * - "narrative": has problem/process/outcome, reads as a founder report.
+ * - "spotlight": led by a video with little supporting imagery.
+ * - "showcase": everything else (media-forward gallery + features).
+ */
+export function getProjectShape(project: Project): ProjectShape {
+  const hasNarrative = Boolean(
+    project.problem || (project.process && project.process.length > 0) || project.outcome
+  );
+  if (hasNarrative) return "narrative";
+
+  const imageCount = project.images?.length ?? 0;
+  const videoCount = project.videos?.length ?? 0;
+  if (videoCount > 0 && imageCount <= 1) return "spotlight";
+
+  return "showcase";
+}
+
+export function getProjectBySlug(slug: string): Project | undefined {
+  return projects.find((project) => project.slug === slug);
+}
+
+export function getAllProjectSlugs(): string[] {
+  return projects.map((project) => project.slug);
+}
+
 export const projects: Project[] = [
   {
     id: 22,
@@ -326,8 +356,6 @@ export const projects: Project[] = [
       "Business fair presentation and pitch development"
     ]
   },
-  // Add these objects inside your `projects: Project[] = [ ... ]` array
-
   {
     id: 13,
     slug: "advisergpt-product-launch-video",
@@ -359,8 +387,7 @@ export const projects: Project[] = [
       "Marketing content creation for LinkedIn and website",
       "Brand storytelling and product demonstration",
       "Customer engagement and conversion-focused content"
-    ],
-    link: "https://example.com"
+    ]
   },
 
   {

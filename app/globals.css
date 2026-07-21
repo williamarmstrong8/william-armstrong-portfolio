@@ -8,65 +8,65 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 196 18% 98%;
     --foreground: 0 0% 0%;
 
-    --card: 0 0% 95%;
+    --card: 196 15% 96%;
     --card-foreground: 0 0% 0%;
 
-    --popover: 0 0% 100%;
+    --popover: 196 12% 99%;
     --popover-foreground: 0 0% 0%;
 
     --primary: 0 0% 0%;
-    --primary-foreground: 210 40% 98%;
+    --primary-foreground: 196 20% 98%;
 
-    --secondary: 210 40% 92%;
+    --secondary: 196 28% 92%;
     --secondary-foreground: 0 0% 0%;
 
-    --muted: 210 40% 92%;
+    --muted: 196 28% 92%;
     --muted-foreground: 0 0% 45%;
 
     --accent: 0 0% 15%;
-    --accent-foreground: 210 40% 98%;
+    --accent-foreground: 196 20% 98%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 196 20% 98%;
 
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
-    --ring: 217 92% 60%;
+    --border: 196 10% 94%;
+    --input: 196 10% 94%;
+    --ring: 225 100% 35%;
 
-    --radius: 1rem;
+    --radius: 0;
 
     /* Portfolio specific design tokens */
     --nav-background: 0 0% 100% / 0.1;
     --nav-foreground: 0 0% 0%;
-    --nav-active: 217 92% 60%;
+    --nav-active: 225 100% 35%;
     --nav-active-foreground: 0 0% 100%;
-    --nav-border: 0 0% 100% / 0.2;
+    --nav-border: 0 0% 0% / 0.08;
 
-    --hero-background: 0 0% 98%;
+    --hero-background: 196 18% 98%;
     --hero-foreground: 0 0% 0%;
 
     --project-card: 0 0% 100% / 0.1;
     --project-card-hover: 0 0% 100% / 0.2;
-    --project-card-border: 0 0% 100% / 0.2;
+    --project-card-border: 0 0% 0% / 0.06;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 92% 60%), hsl(230 85% 70%));
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 98%), hsl(210 40% 96%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-primary: linear-gradient(135deg, hsl(225 100% 35%), hsl(196 67% 45%));
+    --gradient-hero: linear-gradient(180deg, hsl(196 18% 98%), hsl(196 25% 96%));
+    --gradient-card: linear-gradient(145deg, hsl(196 12% 99%), hsl(196 20% 97%));
 
     /* Shadows */
-    --shadow-soft: 0 4px 16px hsl(0 0% 0% / 0.08);
-    --shadow-medium: 0 8px 32px hsl(0 0% 0% / 0.12);
-    --shadow-card: 0 2px 8px hsl(0 0% 0% / 0.06);
+    --shadow-soft: none;
+    --shadow-medium: none;
+    --shadow-card: none;
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 196 18% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
 
@@ -78,14 +78,25 @@ All colors MUST be HSL.
 
     --sidebar-accent-foreground: 240 5.9% 10%;
 
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 196 10% 94%;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 225 100% 35%;
   }
 
 }
 
 @layer base {
+  /* Brutalist flat system: sharp corners, no shadows, everywhere. */
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    --tw-shadow: 0 0 #0000 !important;
+    --tw-shadow-colored: 0 0 #0000 !important;
+    --tw-drop-shadow:  !important;
+  }
+
   * {
     @apply border-border;
   }
@@ -93,17 +104,40 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    /* Use clip (not hidden) so position: sticky still works.
-       overflow-x: hidden would compute overflow-y to auto, turning
-       html/body into a scroll container and breaking sticky children. */
+    /* Clip horizontal overflow on the body only.
+       overflow-x: clip (paired with the default overflow-y: visible) does NOT
+       turn body into a scroll container, so position: sticky keeps working.
+       Crucially, we do NOT constrain overflow on <html>: doing so breaks the
+       viewport IntersectionObserver used by framer-motion's whileInView, which
+       left page content stuck at opacity 0 until a client-side route change. */
     overflow-x: clip;
   }
 
-  /* Smooth scrolling is handled by Lenis (components/SmoothScroll.tsx).
-     scroll-behavior is left as auto to avoid fighting Lenis on anchor jumps. */
-  html {
-    overflow-x: clip;
+  /* Editorial serif for section headers — lighter than former bold sans */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", serif;
+    font-weight: 400;
   }
+
+  /* Keep weight editorial even when utility classes request bold/semibold */
+  h1[class*="font-bold"],
+  h2[class*="font-bold"],
+  h3[class*="font-bold"],
+  h1[class*="font-semibold"],
+  h2[class*="font-semibold"],
+  h3[class*="font-semibold"],
+  h1[class*="font-medium"],
+  h2[class*="font-medium"],
+  h3[class*="font-medium"] {
+    font-weight: 400;
+  }
+
+  /* Smooth scrolling is handled by Lenis (components/SmoothScroll.tsx).
+     scroll-behavior is left as auto to avoid fighting Lenis on anchor jumps.
+     Leave <html> overflow unset (visible) so it stays the natural viewport
+     scroller for IntersectionObserver and sticky positioning. */
 
   /* Hide scrollbar but keep functionality */
   ::-webkit-scrollbar {
@@ -146,12 +180,10 @@ All colors MUST be HSL.
   }
 }
 
-/* Hide the native cursor everywhere while the smooth cursor is active.
-   Kept unlayered so it reliably overrides Tailwind's cursor utilities and
-   element defaults like `a`/`button` (cursor: pointer). */
-body.smooth-cursor-active,
-body.smooth-cursor-active *,
-body.smooth-cursor-active *::before,
-body.smooth-cursor-active *::after {
+/* Hide native cursor while the content-aware cursor is active */
+body.content-cursor-active,
+body.content-cursor-active *,
+body.content-cursor-active *::before,
+body.content-cursor-active *::after {
   cursor: none !important;
 }

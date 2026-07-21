@@ -20,7 +20,7 @@ const ProjectFilter = ({ activeFilter, onFilterChange }: ProjectFilterProps) => 
             "px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap",
             activeFilter === filter
               ? "bg-primary text-primary-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
           )}
         >
           {filter}

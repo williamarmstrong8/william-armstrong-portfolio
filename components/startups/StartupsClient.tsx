@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, startTransition } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ShowcaseCard } from "@/components/showcase/ShowcaseCard";
-import { ShowcaseModal } from "@/components/showcase/ShowcaseModal";
-import { buildMediaItems } from "@/types/showcase";
 import type { Startup } from "@/data/startups";
+import { startupQuips } from "@/lib/cursorQuips";
 
 interface StartupsClientProps {
   startups: Startup[];
@@ -14,7 +13,7 @@ interface StartupsClientProps {
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function StartupsClient({ startups }: StartupsClientProps) {
-  const [selectedStartup, setSelectedStartup] = useState<Startup | null>(null);
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -23,38 +22,30 @@ export default function StartupsClient({ startups }: StartupsClientProps) {
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease, delay: 0.1 }}
+          transition={{ duration: 0.4, ease, delay: 0.07 }}
         >
           <motion.h1
             className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, ease, delay: 0.2 }}
+            transition={{ duration: 0.47, ease, delay: 0.13 }}
           >
             Startups
           </motion.h1>
-          <motion.p
-            className="text-xl text-muted-foreground max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease, delay: 0.4 }}
-          >
-            Entrepreneurial ventures and startups.
-          </motion.p>
         </motion.section>
 
         <motion.section
           className="grid grid-cols-1 lg:grid-cols-2 gap-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.6 }}
+          transition={{ duration: 0.2, delay: 0.4 }}
         >
           {startups.map((startup, index) => (
             <motion.div
-              key={startup.name}
+              key={startup.slug}
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.7 + index * 0.15, ease }}
+              transition={{ duration: 0.4, delay: 0.47 + index * 0.1, ease }}
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
             >
               <ShowcaseCard
@@ -65,6 +56,7 @@ export default function StartupsClient({ startups }: StartupsClientProps) {
                 image={startup.screenshots?.[0]}
                 logo={startup.logo}
                 metrics={startup.metrics}
+                cursorQuip={startupQuips[startup.slug]}
                 actions={[
                   {
                     label: "View Website",
@@ -73,45 +65,17 @@ export default function StartupsClient({ startups }: StartupsClientProps) {
                     icon: "external",
                   },
                   {
-                    label: "Learn More",
+                    label: "Case Study",
+                    href: `/startups/${startup.slug}`,
                     variant: "primary",
-                    onClick: () =>
-                      startTransition(() => setSelectedStartup(startup)),
                   },
                 ]}
-                onClick={() => startTransition(() => setSelectedStartup(startup))}
+                onClick={() => router.push(`/startups/${startup.slug}`)}
               />
             </motion.div>
           ))}
         </motion.section>
       </main>
-
-      <ShowcaseModal
-        open={selectedStartup !== null}
-        onOpenChange={(open) => {
-          if (!open) setSelectedStartup(null);
-        }}
-        entityLabel="Startup"
-        title={selectedStartup?.name ?? ""}
-        category={selectedStartup?.category}
-        logo={selectedStartup?.logo}
-        badge={selectedStartup?.status}
-        media={
-          selectedStartup
-            ? buildMediaItems({ images: selectedStartup.screenshots })
-            : []
-        }
-        description={selectedStartup?.longDescription || selectedStartup?.description || ""}
-        metrics={selectedStartup?.metrics}
-        features={selectedStartup?.features}
-        accomplishments={selectedStartup?.accomplishments}
-        technologies={selectedStartup?.technologies}
-        links={
-          selectedStartup
-            ? [{ href: selectedStartup.website, label: "Visit Website", icon: "external" }]
-            : []
-        }
-      />
     </div>
   );
 }

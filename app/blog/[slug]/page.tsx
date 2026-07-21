@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/blog/api";
 import markdownToHtml from "@/lib/blog/markdownToHtml";
 import BlogPostClient from "@/components/blog/BlogPostClient";
+import { StructuredData } from "@/components/StructuredData";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -24,6 +25,16 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-background px-4 md:px-20 pt-8 pb-16">
+      <StructuredData
+        type="article"
+        data={{
+          title: post.title,
+          excerpt: post.excerpt,
+          image: post.coverImage || post.ogImage?.url,
+          date: post.date,
+          url: `/blog/${post.slug}`,
+        }}
+      />
       <BlogPostClient
         title={post.title}
         coverImage={post.coverImage}

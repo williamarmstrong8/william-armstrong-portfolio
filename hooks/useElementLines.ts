@@ -62,19 +62,35 @@ export function useElementLines(
     const right = getRelative(rightRect);
     const center = getRelative(centerRect);
 
+    // Connect each node's nearest edge to the image. The nodes sit side-by-side
+    // on wide screens and stack vertically on narrow ones, so pick the geometry
+    // (horizontal vs vertical) based on how the node is offset from the image.
+    const computeLine = (
+      node: ReturnType<typeof getRelative>
+    ): LineCoords => {
+      const horizontalGap = Math.max(
+        center.left - node.right,
+        node.left - center.right
+      );
+      const verticalGap = Math.max(
+        center.top - node.bottom,
+        node.top - center.bottom
+      );
+
+      if (horizontalGap >= verticalGap) {
+        return node.centerX < center.centerX
+          ? { x1: node.right, y1: node.centerY, x2: center.left, y2: center.centerY }
+          : { x1: node.left, y1: node.centerY, x2: center.right, y2: center.centerY };
+      }
+
+      return node.centerY < center.centerY
+        ? { x1: node.centerX, y1: node.bottom, x2: center.centerX, y2: center.top }
+        : { x1: node.centerX, y1: node.top, x2: center.centerX, y2: center.bottom };
+    };
+
     setCoords({
-      leftLine: {
-        x1: left.right,
-        y1: left.centerY,
-        x2: center.left,
-        y2: center.centerY,
-      },
-      rightLine: {
-        x1: right.left,
-        y1: right.centerY,
-        x2: center.right,
-        y2: center.centerY,
-      },
+      leftLine: computeLine(left),
+      rightLine: computeLine(right),
       isValid: true,
     });
   }, [leftRef, rightRef, centerRef, containerRef]);

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getAllPosts, getCategories } from "@/lib/blog/api";
+import { getAllPosts } from "@/lib/blog/api";
 import BlogClient from "@/components/blog/BlogClient";
 
 export const metadata: Metadata = {
@@ -11,12 +11,11 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const allPosts = getAllPosts();
-  const categories = getCategories();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="px-4 md:px-20 pt-8 pb-16">
-        <BlogClient posts={allPosts} categories={categories} />
+        <BlogClient posts={allPosts} />
       </main>
     </div>
   );

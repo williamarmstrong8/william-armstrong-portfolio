@@ -32,8 +32,8 @@ const HeroSection = () => {
       pathLength: 1,
       opacity: 1,
       transition: {
-        pathLength: { delay: custom, duration: 1.2, ease: "easeInOut" },
-        opacity: { delay: custom, duration: 0.25, ease: "easeOut" },
+        pathLength: { delay: custom, duration: 0.8, ease: "easeInOut" },
+        opacity: { delay: custom, duration: 0.17, ease: "easeOut" },
       },
     }),
   };
@@ -45,7 +45,7 @@ const HeroSection = () => {
       y: 0,
       transition: {
         delay: custom,
-        duration: 0.7,
+        duration: 0.47,
         ease: "easeOut",
       },
     }),
@@ -58,30 +58,42 @@ const HeroSection = () => {
       }`}
     >
       {/* Header Content */}
-      <div className="w-full text-center mb-[clamp(1.5rem,5vh,4rem)] z-10">
+      <div className="w-full text-center mb-[clamp(3rem,9vh,7rem)] z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.53, ease: "easeOut" }}
         >
           <h1 className="font-bold text-foreground leading-[1.05] tracking-tight text-[clamp(2.25rem,min(8.5vw,13vh),7.5rem)] px-4 md:px-8">
             William Armstrong
           </h1>
           <div className="max-w-3xl mx-auto">
-            <p className="text-muted-foreground mt-[clamp(0.5rem,2vh,1.25rem)] text-[clamp(1.0625rem,min(2.4vw,3.5vh),1.8rem)] font-medium italic">
-              Engineer. Builder. Bridging product, engineering, and business.
+            <p className="text-muted-foreground/80 mt-[clamp(0.5rem,1.5vh,0.9rem)] text-[clamp(0.9rem,min(1.6vw,2.2vh),1.0625rem)] font-medium">
+              Launched 4 startups
+              <span className="mx-2 text-muted-foreground/40" aria-hidden>•</span>
+              automated a $50k workflow
+              <span className="mx-2 text-muted-foreground/40" aria-hidden>•</span>
+              2M+ community engagement
             </p>
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 1 }}
-              className="mt-[clamp(1rem,3vh,2rem)] flex flex-wrap justify-center gap-4"
+              transition={{ delay: 0.53, duration: 0.67 }}
+              className="mt-[clamp(1rem,3vh,2rem)] flex flex-wrap justify-center gap-3"
             >
               <Button
                 asChild
                 size="lg"
                 className="rounded-full px-8 h-12 text-base font-semibold shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <Link href="/startups">View Startups</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="rounded-full px-8 h-12 text-base font-semibold transition-all duration-300"
               >
                 <Link href="/projects">Explore Projects</Link>
               </Button>
@@ -140,11 +152,11 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Center Image - Centered Focal Point (✅ fixed hover) */}
-          <div ref={imageWrapperRef} className="relative z-20 group">
+          <div ref={imageWrapperRef} className="relative z-20 group" data-cursor-quip="that's me">
             <motion.div
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
               className="relative w-[clamp(9rem,min(22vw,28vh),18rem)] h-[clamp(9rem,min(22vw,28vh),18rem)]"
             >
               {/* Image */}
@@ -224,10 +236,10 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* SVG Animated Lines - only when side-by-side (lg and up) */}
+        {/* SVG Animated Lines - orientation-aware so they draw on every screen size */}
         {isValid && (
           <svg
-            className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible hidden lg:block"
+            className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
             aria-hidden="true"
           >
             <motion.path

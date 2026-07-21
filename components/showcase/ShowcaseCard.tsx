@@ -28,6 +28,8 @@ export interface ShowcaseCardProps {
   actions?: ShowcaseCardAction[];
   /** Hover hint shown when the card has no explicit actions. */
   ctaLabel?: string;
+  /** Short funny label shown in the content-aware cursor on hover. */
+  cursorQuip?: string;
   onClick: () => void;
 }
 
@@ -42,6 +44,7 @@ export function ShowcaseCard({
   metrics,
   actions,
   ctaLabel = "View",
+  cursorQuip,
   onClick,
 }: ShowcaseCardProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -59,6 +62,7 @@ export function ShowcaseCard({
       tabIndex={0}
       onClick={onClick}
       onKeyDown={handleKeyDown}
+      data-cursor-quip={cursorQuip || undefined}
       className="group flex cursor-pointer flex-col text-left"
     >
       <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg">
@@ -116,9 +120,9 @@ export function ShowcaseCard({
         )}
 
         {metrics && metrics.length > 0 && (
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
+          <div className="mt-3 flex w-full gap-2 sm:gap-3">
             {metrics.map((metric, index) => (
-              <div key={index} className="rounded-lg bg-muted/50 px-3 py-2 text-center">
+              <div key={index} className="min-w-0 flex-1 rounded-lg bg-muted/50 px-3 py-2 text-center">
                 <div className="text-base font-bold text-foreground">{metric.value}</div>
                 <div className="text-xs text-muted-foreground">{metric.label}</div>
               </div>
@@ -128,25 +132,35 @@ export function ShowcaseCard({
 
         {actions && actions.length > 0 ? (
           <div className="mt-5 flex flex-col gap-2 pt-2 sm:flex-row sm:gap-3">
-            {actions.map((action, index) =>
-              action.href ? (
-                <a
-                  key={index}
-                  href={action.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className={cn(
-                    "inline-flex touch-manipulation items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
-                    action.variant === "primary"
-                      ? "flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "border border-border bg-card hover:bg-accent/5"
-                  )}
-                >
-                  {action.icon === "external" && <ExternalLink className="h-4 w-4 flex-shrink-0" />}
-                  {action.label}
-                </a>
-              ) : (
+            {actions.map((action, index) => {
+              const className = cn(
+                "inline-flex touch-manipulation items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+                action.variant === "primary"
+                  ? "flex-1 bg-nav-active text-nav-active-foreground hover:bg-nav-active/90"
+                  : "border border-border bg-card hover:bg-accent/5"
+              );
+
+              if (action.href) {
+                const isExternal = /^https?:\/\//.test(action.href);
+                return (
+                  <a
+                    key={index}
+                    href={action.href}
+                    {...(isExternal
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    onClick={(e) => e.stopPropagation()}
+                    className={className}
+                  >
+                    {action.icon === "external" && (
+                      <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                    )}
+                    {action.label}
+                  </a>
+                );
+              }
+
+              return (
                 <button
                   key={index}
                   type="button"
@@ -154,18 +168,15 @@ export function ShowcaseCard({
                     e.stopPropagation();
                     action.onClick?.();
                   }}
-                  className={cn(
-                    "inline-flex touch-manipulation items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
-                    action.variant === "primary"
-                      ? "flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "border border-border bg-card hover:bg-accent/5"
-                  )}
+                  className={className}
                 >
-                  {action.icon === "external" && <ExternalLink className="h-4 w-4 flex-shrink-0" />}
+                  {action.icon === "external" && (
+                    <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                  )}
                   {action.label}
                 </button>
-              )
-            )}
+              );
+            })}
           </div>
         ) : (
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
