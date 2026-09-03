@@ -20,6 +20,7 @@ const Navigation = () => {
     { name: "Startups", path: "/startups" },
     { name: "Blog", path: "/blog" },
     { name: "Photography", path: "/photography" },
+    { name: "Academy", path: "https://armstrong-academy-hub.vercel.app" },
   ];
 
   // Close sidebar on route change
@@ -54,17 +55,24 @@ const Navigation = () => {
 
       {/* Desktop Navigation */}
       <nav className={`hidden md:flex items-center bg-nav/80 backdrop-blur-md px-2 py-2 left-1/2 transform -translate-x-1/2 top-6 z-50 ${isSlugPage ? "absolute" : "fixed"}`}>
-        {navItems.map((item) => (
-          <Link key={item.name} href={item.path}>
-            <Button
-              variant="nav"
-              size="sm"
-              className={`mx-1 ${pathname === item.path ? "text-nav-active" : ""}`}
+        {navItems.map((item) => {
+          const isExternal = item.path.startsWith("http");
+          return (
+            <Link
+              key={item.name}
+              href={item.path}
+              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
-              {item.name}
-            </Button>
-          </Link>
-        ))}
+              <Button
+                variant="nav"
+                size="sm"
+                className={`mx-1 ${pathname === item.path ? "text-nav-active" : ""}`}
+              >
+                {item.name}
+              </Button>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Desktop Right Side */}
@@ -125,26 +133,30 @@ const Navigation = () => {
 
               {/* Nav links */}
               <nav className="flex flex-col px-3 py-5 gap-0.5 flex-1 overflow-y-auto">
-                {navItems.map((item, index) => (
-                  <motion.div
-                    key={item.name}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.06 + index * 0.05, duration: 0.2 }}
-                  >
-                    <Link
-                      href={item.path}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors ${
-                        pathname === item.path
-                          ? "bg-primary/10 text-primary"
-                          : "text-foreground hover:bg-muted"
-                      }`}
+                {navItems.map((item, index) => {
+                  const isExternal = item.path.startsWith("http");
+                  return (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: 16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.06 + index * 0.05, duration: 0.2 }}
                     >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                ))}
+                      <Link
+                        href={item.path}
+                        onClick={() => setIsMenuOpen(false)}
+                        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors ${
+                          pathname === item.path
+                            ? "bg-primary/10 text-primary"
+                            : "text-foreground hover:bg-muted"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </nav>
 
               {/* Connect button pinned to bottom */}
