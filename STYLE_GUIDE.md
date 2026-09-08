@@ -33,61 +33,61 @@ All colors are defined as HSL channel triplets in `:root` and consumed via Tailw
 /* app/globals.css */
 :root {
   /* Surfaces & text */
-  --background: 0 0% 98%;        /* near-white canvas */
+  --background: 196 18% 98%;     /* cool near-white canvas */
   --foreground: 0 0% 0%;         /* true black text (neutral, no tint) */
 
-  --card: 0 0% 95%;              /* card surface (a step DOWN from background) */
+  --card: 196 15% 96%;           /* card surface (a step DOWN from background) */
   --card-foreground: 0 0% 0%;
 
-  --popover: 0 0% 100%;          /* pure-white floating surfaces */
+  --popover: 196 12% 99%;        /* near-white floating surfaces */
   --popover-foreground: 0 0% 0%;
 
   /* Brand */
   --primary: 0 0% 0%;            /* primary == foreground (true black) */
-  --primary-foreground: 210 40% 98%;
+  --primary-foreground: 196 20% 98%;
 
-  --secondary: 210 40% 92%;
+  --secondary: 196 28% 92%;
   --secondary-foreground: 0 0% 0%;
 
-  --muted: 210 40% 92%;
+  --muted: 196 28% 92%;
   --muted-foreground: 0 0% 45%;  /* neutral gray secondary text */
 
   --accent: 0 0% 15%;            /* near-black hover surface (ghost/outline) */
-  --accent-foreground: 210 40% 98%;
+  --accent-foreground: 196 20% 98%;
 
   --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive-foreground: 196 20% 98%;
 
   /* Lines / form / focus */
-  --border: 220 13% 88%;
-  --input: 220 13% 88%;
-  --ring: 217 92% 60%;           /* THE accent — bright blue */
+  --border: 196 10% 94%;
+  --input: 196 10% 94%;
+  --ring: 225 100% 35%;          /* THE accent - deep blue */
 
-  --radius: 1rem;                /* 16px — the master radius */
+  --radius: 0;                   /* flat brutalist: everything square */
 
   /* Navigation island */
   --nav-background: 0 0% 100% / 0.1;
   --nav-foreground: 0 0% 0%;
-  --nav-active: 217 92% 60%;     /* same blue as --ring */
+  --nav-active: 225 100% 35%;    /* same blue as --ring */
   --nav-active-foreground: 0 0% 100%;
-  --nav-border: 0 0% 100% / 0.2;
+  --nav-border: 0 0% 0% / 0.08;
 
   /* Hero & cards */
-  --hero-background: 0 0% 98%;
+  --hero-background: 196 18% 98%;
   --hero-foreground: 0 0% 0%;
   --project-card: 0 0% 100% / 0.1;
   --project-card-hover: 0 0% 100% / 0.2;
-  --project-card-border: 0 0% 100% / 0.2;
+  --project-card-border: 0 0% 0% / 0.06;
 
   /* Gradients (used very sparingly) */
-  --gradient-primary: linear-gradient(135deg, hsl(217 92% 60%), hsl(230 85% 70%));
-  --gradient-hero:    linear-gradient(180deg, hsl(0 0% 98%), hsl(210 40% 96%));
-  --gradient-card:    linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
+  --gradient-primary: linear-gradient(135deg, hsl(225 100% 35%), hsl(196 67% 45%));
+  --gradient-hero:    linear-gradient(180deg, hsl(196 18% 98%), hsl(196 25% 96%));
+  --gradient-card:    linear-gradient(145deg, hsl(196 12% 99%), hsl(196 20% 97%));
 
-  /* Shadows (neutral black, low opacity) */
-  --shadow-soft:   0 4px 16px hsl(0 0% 0% / 0.08);
-  --shadow-medium: 0 8px 32px hsl(0 0% 0% / 0.12);
-  --shadow-card:   0 2px  8px hsl(0 0% 0% / 0.06);
+  /* Shadows (disabled in the shipped flat system) */
+  --shadow-soft:   none;
+  --shadow-medium: none;
+  --shadow-card:   none;
 
   /* Motion */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -201,6 +201,11 @@ Always pair shadow change with `transition-shadow` (or `transition-[transform,bo
 
 ### 2.6 Motion / transitions
 
+> **Live build note:** the canonical values below ship in `lib/motion.ts`
+> (`EASE`, `DELAY`, `DURATION`, and the `pageHeader` / `pageTitle` / `fadeUp` /
+> `gridWrap` / `cardEntrance` / `cardHover` builders). Import from there -
+> never re-declare timing numbers in a page.
+
 A small, reusable set of values is used everywhere. Memorize these:
 
 | Token                | Value                                  | Where                                  |
@@ -255,10 +260,11 @@ The hero photo uses ambient slow `animate-[spin_20s_linear_infinite]` and `anima
 
 These are set once in `globals.css` and assumed everywhere:
 
-* `html { scroll-behavior: smooth; overflow-x: hidden; }`
-* `body { background: var(--background); color: var(--foreground); overflow-x: hidden; }`
+* Page shells use `min-h-svh` (not `min-h-screen`) so mobile Safari/Chrome chrome does not crop the fold.
+* `body { background: var(--background); color: var(--foreground); overflow-x: clip; }` (clip, so sticky keeps working; `<html>` overflow is left alone for IntersectionObserver)
+* `@media (hover: none) { .group .group-hover\:opacity-100 { opacity: 1 } }` - touch devices keep hover-reveal CTAs visible.
 * **Scrollbars hidden** (`::-webkit-scrollbar { display: none; }`, `scrollbar-width: none`). The page is still scrollable.
-* `::selection { @apply bg-primary/20 text-primary-foreground; }`
+* `::selection { @apply bg-primary/15 text-foreground; }` (dark ink on the translucent-black wash - the reverse is unreadable)
 * Focus visible everywhere: `*:focus-visible { @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background; }`
 * `img { max-width: 100%; height: auto; }`
 * Body scroll-lock pattern when modals/sidebars open: toggle `document.body.style.overflow = 'hidden'` and `document.documentElement.style.overflow = 'hidden'`, restore on close.
@@ -634,7 +640,10 @@ Every non-home page follows the same four-line skeleton:
 </div>
 ```
 
-The page header is itself standardized:
+The page header is itself standardized - and ships as `components/PageHeader.tsx`
+(`title`, optional `subtitle`, `className` for the section margin). Detail pages
+(blog post, project/startup case study) share `components/BackLink.tsx`
+(`pill` floating variant, `plain` rail variant). The header markup:
 
 ```tsx
 <motion.section

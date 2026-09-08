@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import ProjectFilter from "@/components/ProjectFilter";
+import FilterBar from "@/components/FilterBar";
+import PageHeader from "@/components/PageHeader";
 import { ShowcaseCard } from "@/components/showcase/ShowcaseCard";
+import { fadeUp, cardEntrance, cardHover } from "@/lib/motion";
 import type { Project } from "@/data/projects";
 import { projectQuips } from "@/lib/cursorQuips";
 
@@ -26,31 +28,21 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
       : projects.filter((project) => project.category === activeFilter);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-svh bg-background text-foreground">
       <main className="px-4 md:px-20 pt-8 pb-16">
-        <motion.section
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.07 }}
-        >
-          <motion.h1
-            className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.47, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.13 }}
-          >
-            Projects
-          </motion.h1>
-        </motion.section>
+        <PageHeader title="Projects" className="text-center mb-12" />
 
         <motion.section
           className="flex justify-center md:justify-end mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.33, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.27 }}
+          initial={fadeUp().initial}
+          animate={fadeUp().animate}
+          transition={fadeUp().transition}
         >
-          <ProjectFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
+          <FilterBar
+            tabs={["All", "Automations", "Apps & sites", "Hardware"]}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
         </motion.section>
 
         {/* Projects Grid - animate out all cards on filter change, then new set animates in */}
@@ -58,7 +50,7 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
           {filteredProjects.length > 0 ? (
             <motion.section
               key={activeFilter}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

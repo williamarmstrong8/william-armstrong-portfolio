@@ -5,6 +5,9 @@ import { Briefcase, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import AboutCard from "@/components/AboutCard";
 import Timeline from "@/components/Timeline";
+import PageHeader from "@/components/PageHeader";
+import { Button } from "@/components/ui/button";
+import { EASE } from "@/lib/motion";
 
 export default function AboutClient() {
   // About cards data (do not change)
@@ -133,32 +136,9 @@ export default function AboutClient() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-svh bg-background text-foreground">
       <main className="px-4 md:px-20 pt-8 pb-16">
-        {/* Page Title */}
-        <motion.section
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.4,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.07,
-          }}
-        >
-          <motion.h1
-            className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.47,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.13,
-            }}
-          >
-            About Me
-          </motion.h1>
-        </motion.section>
+        <PageHeader title="About Me" />
 
         {/* About Cards (unchanged) */}
         <motion.section
@@ -181,7 +161,7 @@ export default function AboutClient() {
                 transition: {
                   duration: 0.27,
                   delay: 0.47 + index * 0.067,
-                  ease: [0.25, 0.46, 0.45, 0.94],
+                  ease: EASE,
                 },
               }}
               whileHover={{
@@ -243,7 +223,7 @@ export default function AboutClient() {
           animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.33,
-            ease: [0.25, 0.46, 0.45, 0.94],
+            ease: EASE,
             delay: 1.2,
           }}
         >
@@ -253,7 +233,7 @@ export default function AboutClient() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration: 0.27,
-              ease: [0.25, 0.46, 0.45, 0.94],
+              ease: EASE,
               delay: 1.27,
             }}
             whileHover={{
@@ -267,7 +247,7 @@ export default function AboutClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.27,
-                ease: [0.25, 0.46, 0.45, 0.94],
+                ease: EASE,
                 delay: 1.33,
               }}
             >
@@ -279,7 +259,7 @@ export default function AboutClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.27,
-                ease: [0.25, 0.46, 0.45, 0.94],
+                ease: EASE,
                 delay: 1.4,
               }}
             >
@@ -292,15 +272,17 @@ export default function AboutClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.27,
-                ease: [0.25, 0.46, 0.45, 0.94],
+                ease: EASE,
                 delay: 1.47,
               }}
             >
-              <Link href="/contact">
-                <button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-3 font-semibold transition-all duration-300 ease-out hover:scale-105">
-                  Get In Touch
-                </button>
-              </Link>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full px-8 h-12 text-base font-semibold shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <Link href="/contact">Get In Touch</Link>
+              </Button>
             </motion.div>
           </motion.div>
         </motion.section>

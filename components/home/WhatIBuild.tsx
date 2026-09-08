@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Globe, Sparkles, Zap, LayoutTemplate, Hammer, Rocket, User, Box, GitMerge } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 // ─── ExecutionCard (First Card) ───────────────────────────────────────────────
 
@@ -363,7 +362,6 @@ function EngineeringCard() {
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 const WhatIBuild = () => {
-  const isMobile = useIsMobile();
   const shouldReduceMotion = useReducedMotion();
 
   const containerVariants = {
@@ -394,7 +392,7 @@ const WhatIBuild = () => {
   return (
     <section
       id="what-i-build"
-      className={`bg-background py-16 ${isMobile ? "px-6" : "px-20"}`}
+      className="bg-background py-16 px-6 md:px-20"
       aria-labelledby="bento-heading"
     >
       <div className="max-w-7xl mx-auto">

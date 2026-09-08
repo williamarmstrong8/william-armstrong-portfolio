@@ -13,7 +13,7 @@ export default function BlogPage() {
   const allPosts = getAllPosts();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-svh bg-background text-foreground">
       <main className="px-4 md:px-20 pt-8 pb-16">
         <BlogClient posts={allPosts} />
       </main>

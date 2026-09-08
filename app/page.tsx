@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-hero text-hero-foreground">
+    <div className="min-h-svh bg-hero text-hero-foreground">
       <HeroSection />
       <WhatIBuild />
       <FeaturedStartups />

@@ -94,7 +94,7 @@ All colors MUST be HSL.
     box-shadow: none !important;
     --tw-shadow: 0 0 #0000 !important;
     --tw-shadow-colored: 0 0 #0000 !important;
-    --tw-drop-shadow:  !important;
+    --tw-drop-shadow: drop-shadow(0 0 #0000) !important;
   }
 
   * {
@@ -156,7 +156,7 @@ All colors MUST be HSL.
 
   /* Selection styling */
   ::selection {
-    @apply bg-primary/20 text-primary-foreground;
+    @apply bg-primary/15 text-foreground;
   }
 
   /* Focus styles */
@@ -177,6 +177,14 @@ All colors MUST be HSL.
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/* Touch devices have no hover state: keep hover-reveal affordances
+   (card "View ..." CTAs) always visible so they are not permanently hidden. */
+@media (hover: none) {
+  .group .group-hover\:opacity-100 {
+    opacity: 1;
   }
 }
 

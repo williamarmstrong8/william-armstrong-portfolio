@@ -80,8 +80,9 @@ const Navigation = () => {
       <div className="md:hidden">
         <button
           onClick={() => setIsMenuOpen(true)}
-          className="p-2 touch-manipulation"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-2 touch-manipulation"
           aria-label="Open menu"
+          aria-expanded={isMenuOpen}
         >
           <Menu size={22} />
         </button>
@@ -148,7 +149,7 @@ const Navigation = () => {
               </nav>
 
               {/* Connect button pinned to bottom */}
-              <div className="px-5 pb-10 pt-4 border-t border-border">
+              <div className="px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-4 border-t border-border">
                 <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="connect" className="w-full">
                     Connect

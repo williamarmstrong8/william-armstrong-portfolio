@@ -11,7 +11,9 @@ import "react-photo-album/masonry.css";
 import "yet-another-react-lightbox/styles.css";
 
 import type { PhotoLite } from "@/lib/photography";
-import { cn } from "@/lib/utils";
+import FilterBar from "@/components/FilterBar";
+import PageHeader from "@/components/PageHeader";
+import { fadeUp, cardEntrance } from "@/lib/motion";
 
 type AlbumPhoto = RpaPhoto & {
   blurDataURL: string;
@@ -154,49 +156,21 @@ export default function PhotographyClient({ photos, topPhotos, folders }: Props)
   }, [setQuery]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-svh bg-background text-foreground">
       <main className="px-4 md:px-20 pt-8 pb-16">
-        {/* Page header — fades in like Projects. The skeleton reserves this
-            space invisibly, so the fade is the header's first appearance. */}
-        <motion.section
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.4,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.07,
-          }}
-        >
-          <motion.h1
-            className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none mb-6"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.47,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: 0.13,
-            }}
-          >
-            Photography
-          </motion.h1>
-        </motion.section>
+        <PageHeader title="Photography" className="text-center mb-12" />
 
         {/* Filter — same shell as ProjectFilter, centered */}
         <motion.section
           className="flex justify-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.33,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 0.27,
-          }}
+          initial={fadeUp().initial}
+          animate={fadeUp().animate}
+          transition={fadeUp().transition}
         >
-          <PhotoFilterBar
-            folders={folders}
+          <FilterBar
+            tabs={["Top", ...folders]}
             activeFilter={activeFilter}
-            onPick={onPickFilter}
+            onFilterChange={onPickFilter}
           />
         </motion.section>
 
@@ -302,14 +276,10 @@ function NextImageSlide({
     <motion.div
       data-cursor-quip={PHOTO_QUIPS[photo.src]}
       className="group relative w-full h-full overflow-hidden rounded-lg bg-muted"
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -12, scale: 0.98, transition: { duration: 0.2 } }}
-      transition={{
-        duration: 0.4,
-        delay: useLongStagger ? 0.47 + index * 0.1 : 0.13 + index * 0.053,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
+      initial={cardEntrance(index, useLongStagger).initial}
+      animate={cardEntrance(index, useLongStagger).animate}
+      exit={cardEntrance(index, useLongStagger).exit}
+      transition={cardEntrance(index, useLongStagger).transition}
     >
       <Image
         src={photo.src}
@@ -323,44 +293,9 @@ function NextImageSlide({
         className="block w-full h-auto"
       />
       <div
-        className="pointer-events-none absolute inset-0 rounded-lg bg-black/0 transition-colors duration-400 ease-out group-hover:ease-in group-hover:bg-black/40"
+        className="pointer-events-none absolute inset-0 rounded-lg bg-black/0 transition-colors duration-300 ease-out group-hover:ease-in group-hover:bg-black/40"
         aria-hidden
       />
     </motion.div>
-  );
-}
-
-/** Matches `ProjectFilter` styling — rounded card + pill buttons. */
-function PhotoFilterBar({
-  folders,
-  activeFilter,
-  onPick,
-}: {
-  folders: string[];
-  activeFilter: string;
-  onPick: (folder: string) => void;
-}) {
-  const tabs = ["Top", ...folders];
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3 bg-card border border-border rounded-full p-2 max-w-full">
-      {tabs.map((folder) => {
-        const isActive = activeFilter === folder;
-        return (
-          <button
-            key={folder}
-            type="button"
-            onClick={() => onPick(folder)}
-            className={cn(
-              "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
-              isActive
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
-            )}
-          >
-            {folder}
-          </button>
-        );
-      })}
-    </div>
   );
 }

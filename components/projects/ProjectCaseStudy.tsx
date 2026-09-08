@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Check, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Check, ExternalLink } from "lucide-react";
+import BackLink from "@/components/BackLink";
 import AutoImage from "./AutoImage";
 import { buildMediaItems, type MediaItem } from "@/types/showcase";
 import { getProjectShape, type Project } from "@/data/projects";
@@ -151,17 +152,11 @@ export default function ProjectCaseStudy({ project }: ProjectCaseStudyProps) {
   const take = () => (queue.length > 0 ? queue.shift()! : null);
 
   return (
-    <article className="min-h-screen bg-background text-foreground">
+    <article className="min-h-svh bg-background text-foreground">
       <div className="px-4 md:px-20 pt-8 pb-20">
         <div className="max-w-5xl mx-auto">
           <div className="sticky top-6 z-40 mb-10 w-fit">
-            <Link
-              href="/projects"
-              className="group inline-flex items-center gap-2 bg-nav/80 backdrop-blur-md px-4 py-2 text-sm font-medium text-nav-foreground transition-colors hover:text-muted-foreground"
-            >
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              Back to Projects
-            </Link>
+            <BackLink href="/projects" label="Back to Projects" />
           </div>
 
           <header className="space-y-8 md:space-y-10 mb-16 md:mb-20">
