@@ -1,6 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
-import WhatIBuild from "@/components/home/WhatIBuild";
-import FeaturedStartups from "@/components/home/FeaturedStartups";
+import Statement from "@/components/home/Statement";
+import SelectedWork from "@/components/home/SelectedWork";
+import ContactCTA from "@/components/home/ContactCTA";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,10 +13,11 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-svh bg-hero text-hero-foreground">
+    <div className="min-h-svh bg-background text-foreground">
       <HeroSection />
-      <WhatIBuild />
-      <FeaturedStartups />
+      <Statement />
+      <SelectedWork />
+      <ContactCTA />
     </div>
   );
 }
