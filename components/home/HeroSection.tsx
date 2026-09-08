@@ -6,12 +6,10 @@ import type { Variants } from "framer-motion";
 import Image from "next/image";
 import { BLUR_DATA_URL } from "@/lib/blur";
 import Link from "next/link";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useElementLines } from "@/hooks/useElementLines";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
-  const isMobile = useIsMobile();
   const shouldReduceMotion = useReducedMotion();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,9 +51,7 @@ const HeroSection = () => {
 
   return (
     <main
-      className={`relative min-h-screen flex flex-col items-center justify-start overflow-hidden bg-background pt-[clamp(1rem,3.5vh,2.5rem)] pb-[clamp(2rem,5vh,4rem)] ${
-        isMobile ? "px-6" : "px-20"
-      }`}
+      className="relative min-h-svh flex flex-col items-center justify-start overflow-hidden bg-background pt-[clamp(1rem,3.5vh,2.5rem)] pb-[clamp(2rem,5vh,4rem)] px-6 md:px-20"
     >
       {/* Header Content */}
       <div className="w-full text-center mb-[clamp(3rem,9vh,7rem)] z-10">

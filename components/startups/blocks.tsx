@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { BLUR_DATA_URL } from "@/lib/blur";
 import {
   getBrandImageSize,
@@ -10,6 +9,7 @@ import {
 } from "@/lib/brandImageSizes";
 import type { CaseStudyBlock, CaseStudyPillar, Startup } from "@/data/startups";
 import { cn } from "@/lib/utils";
+import BackLink from "@/components/BackLink";
 import SectionGuide from "./SectionGuide";
 
 /** Turn a section label into a stable anchor id, e.g. "What we built" → "what-we-built". */
@@ -43,11 +43,11 @@ export function CaseStudyShell({
   className?: string;
 }) {
   return (
-    <article className="min-h-screen bg-background text-foreground">
+    <article className="min-h-svh bg-background text-foreground">
       <div className="px-4 md:px-20 pt-8 pb-20">
         {/* Small screens: the rail is hidden, so show a back pill up top. */}
         <div className="xl:hidden sticky top-6 z-40 mb-10">
-          <BackLink variant="pill" />
+          <BackToStartups variant="pill" />
         </div>
 
         <div className="relative">
@@ -55,7 +55,7 @@ export function CaseStudyShell({
               wide screens so the main content stays centered. */}
           <div className="hidden xl:block absolute left-0 top-0 h-full w-44">
             <div className="sticky top-8 space-y-8">
-              <BackLink variant="plain" />
+              <BackToStartups variant="plain" />
               <SectionGuide />
             </div>
           </div>
@@ -67,24 +67,9 @@ export function CaseStudyShell({
   );
 }
 
-/** "Back to Startups" link. `pill` = white button (mobile), `plain` = text (rail). */
-export function BackLink({ variant = "plain" }: { variant?: "pill" | "plain" }) {
-  const base =
-    "group inline-flex items-center gap-2 text-sm font-medium transition-colors";
-  return (
-    <Link
-      href="/startups"
-      className={cn(
-        base,
-        variant === "pill"
-          ? "bg-white border border-border shadow-sm backdrop-blur-md px-4 py-2 text-nav-foreground hover:text-muted-foreground"
-          : "text-muted-foreground hover:text-foreground",
-      )}
-    >
-      <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-      Back to Startups
-    </Link>
-  );
+/** "Back to Startups" link, shared across all detail pages. */
+function BackToStartups({ variant = "plain" }: { variant?: "pill" | "plain" }) {
+  return <BackLink href="/startups" label="Back to Startups" variant={variant} />;
 }
 
 /* -------------------------------------------------------------------------- */

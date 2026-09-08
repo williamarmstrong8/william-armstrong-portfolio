@@ -24,7 +24,7 @@ export default async function BlogPostPage({ params }: Props) {
   const prevPost = currentIndex >= 0 && currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null; // older
 
   return (
-    <main className="min-h-screen bg-background px-4 md:px-20 pt-8 pb-16">
+    <main className="min-h-svh bg-background px-4 md:px-20 pt-8 pb-16">
       <StructuredData
         type="article"
         data={{

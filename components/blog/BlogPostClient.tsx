@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import BackLink from "@/components/BackLink";
 import { motion } from "framer-motion";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
@@ -41,13 +42,7 @@ export default function BlogPostClient({
             delay: 0.07,
           }}
         >
-          <Link
-            href="/blog"
-            className="group inline-flex items-center gap-2 rounded-full bg-nav/80 backdrop-blur-md border border-nav-border px-4 py-2 text-sm font-medium text-nav-foreground transition-all duration-300 hover:text-muted-foreground"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-            Back to Blog
-          </Link>
+          <BackLink href="/blog" label="Back to Blog" />
         </motion.div>
       </div>
 
