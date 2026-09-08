@@ -195,3 +195,22 @@ body.content-cursor-active *::before,
 body.content-cursor-active *::after {
   cursor: none !important;
 }
+
+/* IndexList media rules: rows show an inline image everywhere EXCEPT on
+   desktop-class devices with a real hover capability, where the row's hover
+   preview takes over. This also prevents the touch-device global
+   group-hover override from stacking every preview at once. */
+.index-inline-img {
+  display: block;
+}
+.index-hover-preview {
+  display: none;
+}
+@media (min-width: 768px) and (hover: hover) {
+  .index-inline-img {
+    display: none;
+  }
+  .index-hover-preview {
+    display: block;
+  }
+}

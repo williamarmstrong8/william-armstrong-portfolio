@@ -46,7 +46,7 @@ export default function IndexList({ items }: { items: IndexListItem[] }) {
             >
               {/* Inline image: small screens and touch devices */}
               {item.image && (
-                <div className="relative mb-6 aspect-[16/10] w-full overflow-hidden bg-muted md:hidden">
+                <div className="index-inline-img relative mb-6 aspect-[16/10] w-full overflow-hidden bg-muted">
                   <Image
                     src={item.image}
                     alt={item.name}
@@ -89,7 +89,7 @@ export default function IndexList({ items }: { items: IndexListItem[] }) {
 
             {/* Hover preview: desktop only */}
             {item.image && (
-              <div className="pointer-events-none absolute right-[10%] top-1/2 z-20 hidden w-[24rem] max-w-[36vw] -translate-y-1/2 scale-95 opacity-0 transition-all duration-300 ease-out group-hover:scale-100 group-hover:opacity-100 md:block">
+              <div className="index-hover-preview pointer-events-none absolute right-[10%] top-1/2 z-20 w-[24rem] max-w-[36vw] -translate-y-1/2 scale-95 opacity-0 transition-all duration-300 ease-out group-hover:scale-100 group-hover:opacity-100">
                 <div className="relative aspect-video w-full overflow-hidden border border-border bg-muted">
                   <Image
                     src={item.image}

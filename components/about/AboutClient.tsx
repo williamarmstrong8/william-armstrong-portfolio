@@ -9,7 +9,7 @@ import { BLUR_DATA_URL } from "@/lib/blur";
 import { EASE } from "@/lib/motion";
 
 const photos = [
-  { src: "/about-me.jpg", alt: "William Armstrong", offset: false },
+  { src: "/william.png", alt: "William Armstrong", offset: false },
   { src: "/brands/happy-mile/gathering.jpeg", alt: "Happy Mile Run Club gathering", offset: true },
   { src: "/brands/modbrew/wide.jpeg", alt: "Mod Brew pop-up", offset: false },
   { src: "/brands/happy-mile/group.jpeg", alt: "Happy Mile runners", offset: true },
