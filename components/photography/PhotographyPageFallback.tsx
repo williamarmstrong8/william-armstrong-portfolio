@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import PageHeader from "@/components/PageHeader";
 import { folders } from "@/lib/photography";
 import { cn } from "@/lib/utils";
 
@@ -21,63 +22,45 @@ const TILE_CLASSES = [
   "aspect-[2/3]",
 ];
 
-/**
- * Suspense fallback for the photography route while `useSearchParams()` hydrates.
- *
- * Mirrors the real layout 1:1 to prevent CLS:
- * - Same header sizing (incl. mobile subtitle scale).
- * - Same filter shell with the real labels and "Top" pre-selected — widths match exactly.
- * - Same masonry breakpoints as `MasonryPhotoAlbum` (1 / 2 / 3 / 4 cols at <640 / ≥640 / ≥1024 / ≥1280)
- *   and the same 10px spacing, using CSS columns to approximate masonry flow.
- */
+/** Visible route fallback with the same heading, filter sizes, and masonry rhythm. */
 export default function PhotographyPageFallback() {
   const tabs = ["Top", ...folders];
   return (
     <div
       className="min-h-svh bg-background text-foreground"
       aria-busy="true"
-      aria-live="polite"
     >
       <main className="px-4 md:px-20 pt-8 pb-16">
-        {/* Header is invisible but space-reserving: the real header fades in on
-            mount (like Projects), so painting it solid here would double-flash.
-            opacity-0 keeps the exact layout to avoid CLS. */}
-        <section className="text-center mb-12 opacity-0" aria-hidden>
-          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none">
-            Photography
-          </h1>
-        </section>
-        <span className="sr-only">Loading photography gallery</span>
+        <PageHeader title="Photography" className="text-center mb-12" animate={false} />
 
-        {/* Same: reserve the filter row's height, but keep it invisible so the
-            real filter bar fades in cleanly. */}
-        <section className="flex justify-center mb-12 opacity-0" aria-hidden>
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 bg-card border border-border rounded-2xl sm:rounded-full p-1.5 sm:p-2 max-w-full">
+        <section className="flex justify-center mb-12" aria-label="Photo categories loading">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 bg-card border border-border p-1.5 sm:p-2 max-w-full">
             {tabs.map((folder, i) => (
-              <span
+              <button
                 key={folder}
+                type="button"
+                disabled
                 className={cn(
-                  "px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium select-none whitespace-nowrap",
+                  "min-h-11 px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium select-none whitespace-nowrap",
                   i === 0
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground",
                 )}
               >
                 {folder}
-              </span>
+              </button>
             ))}
           </div>
         </section>
 
-        {/* Reserve approximate masonry height to limit scroll jump, but keep it
-            invisible — the real tiles fade/stagger in on mount (like Projects),
-            so solid placeholders here would double-flash. */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2.5 opacity-0" aria-hidden>
+        <p className="mb-6 text-sm text-muted-foreground" role="status">Loading photography gallery…</p>
+
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2.5" aria-hidden="true">
           {Array.from({ length: 12 }).map((_, i) => (
             <Skeleton
               key={i}
               className={cn(
-                "w-full mb-2.5 break-inside-avoid rounded-lg",
+                "w-full mb-2.5 break-inside-avoid motion-reduce:animate-none",
                 TILE_CLASSES[i % TILE_CLASSES.length],
               )}
             />

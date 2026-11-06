@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
+import { PROJECT_IMAGE_SIZES } from "@/lib/projectImageSizes";
 import { BLUR_DATA_URL } from "@/lib/blur";
 
 interface AutoImageProps {
@@ -15,22 +13,20 @@ interface AutoImageProps {
   capPortrait?: boolean;
 }
 
-/**
- * Renders a project image at its true aspect ratio. Project screenshots have no
- * pre-recorded dimensions, so we measure the natural size on load and pin the
- * frame's `aspect-ratio` to it. Portraits get width-capped and centered so they
- * never blow up the layout, and nothing is ever cropped or stretched.
- */
+/** Preserves the intrinsic aspect ratio from first render, with an optional portrait width cap. */
 export default function AutoImage({
   src,
   alt,
   priority = false,
-  sizes = "(max-width: 768px) 100vw, 900px",
+  sizes,
   className = "",
   capPortrait = true,
 }: AutoImageProps) {
-  const [ratio, setRatio] = useState<number | null>(null);
-  const portrait = capPortrait && ratio !== null && ratio < 0.95;
+  const { width, height } = PROJECT_IMAGE_SIZES[src];
+  const portrait = capPortrait && width / height < 0.95;
+  const imageSizes = sizes ?? (portrait
+    ? "(min-width: 768px) 448px, (min-width: 416px) 384px, calc(100vw - 32px)"
+    : "(min-width: 1184px) 1024px, (min-width: 768px) calc(100vw - 160px), calc(100vw - 32px)");
 
   return (
     <div
@@ -38,24 +34,18 @@ export default function AutoImage({
         portrait ? "mx-auto w-full max-w-sm md:max-w-md" : "w-full"
       } ${className}`}
     >
-      <div className="relative w-full" style={{ aspectRatio: ratio ? String(ratio) : "16 / 10" }}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes={sizes}
-          placeholder="blur"
-          blurDataURL={BLUR_DATA_URL}
-          className="object-cover"
-          onLoad={(e) => {
-            const img = e.currentTarget;
-            if (img.naturalWidth && img.naturalHeight) {
-              setRatio(img.naturalWidth / img.naturalHeight);
-            }
-          }}
-        />
-      </div>
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        priority={priority}
+        sizes={imageSizes}
+        placeholder="blur"
+        blurDataURL={BLUR_DATA_URL}
+        style={{ aspectRatio: `${width} / ${height}` }}
+        className="block h-auto w-full object-contain"
+      />
     </div>
   );
 }

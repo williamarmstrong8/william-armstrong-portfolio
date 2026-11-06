@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ShowcaseCard } from "@/components/showcase/ShowcaseCard";
 import PageHeader from "@/components/PageHeader";
 import type { Startup } from "@/data/startups";
@@ -13,7 +13,7 @@ interface StartupsClientProps {
 }
 
 export default function StartupsClient({ startups }: StartupsClientProps) {
-  const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="min-h-svh bg-background text-foreground">
@@ -22,15 +22,17 @@ export default function StartupsClient({ startups }: StartupsClientProps) {
 
         <motion.section
           className="grid grid-cols-1 lg:grid-cols-2 gap-10"
-          initial={{ opacity: 0 }}
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: 0.4 }}
+          transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2, delay: 0.4 }}
         >
           {startups.map((startup, index) => (
             <motion.div
               key={startup.slug}
-              {...cardEntrance(index, true)}
-              whileHover={cardHover}
+              {...(shouldReduceMotion
+                ? { initial: false as const, animate: { opacity: 1, y: 0, scale: 1 }, transition: { duration: 0 } }
+                : cardEntrance(index, true))}
+              whileHover={shouldReduceMotion ? undefined : cardHover}
             >
               <ShowcaseCard
                 title={startup.name}
@@ -38,6 +40,7 @@ export default function StartupsClient({ startups }: StartupsClientProps) {
                 status={startup.status}
                 description={startup.description}
                 image={startup.screenshots?.[0]}
+                sizes="(min-width: 1024px) calc((100vw - 200px) / 2), (min-width: 768px) calc(100vw - 160px), calc(100vw - 32px)"
                 logo={startup.logo}
                 metrics={startup.metrics}
                 cursorQuip={startupQuips[startup.slug]}
@@ -54,7 +57,7 @@ export default function StartupsClient({ startups }: StartupsClientProps) {
                     variant: "primary",
                   },
                 ]}
-                onClick={() => router.push(`/startups/${startup.slug}`)}
+                href={`/startups/${startup.slug}`}
               />
             </motion.div>
           ))}

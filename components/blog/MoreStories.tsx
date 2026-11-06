@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Post } from "@/interfaces/post";
 import PostPreview from "./PostPreview";
 import { cardEntrance, cardHover } from "@/lib/motion";
@@ -10,18 +11,21 @@ type Props = {
 };
 
 export default function MoreStories({ posts }: Props) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <motion.section
-      initial={{ opacity: 0 }}
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.2, delay: 0.4 }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2, delay: 0.4 }}
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
     >
       {posts.map((post, index) => (
         <motion.div
           key={post.slug}
-          {...cardEntrance(index, true)}
-          whileHover={cardHover}
+          {...(shouldReduceMotion
+            ? { initial: false as const, animate: { opacity: 1 }, transition: { duration: 0 } }
+            : cardEntrance(index, true))}
+          whileHover={shouldReduceMotion ? undefined : cardHover}
         >
           <PostPreview
             title={post.title}

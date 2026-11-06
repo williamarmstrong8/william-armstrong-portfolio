@@ -34,10 +34,10 @@ export default function PostPreview({
       <Link
         href={`/blog/${slug}`}
         data-cursor-quip={blogQuips[slug]}
-        className="flex flex-col w-full text-left transform-gpu transition-[transform] duration-300 ease-out hover:-translate-y-1"
+        className="flex flex-col w-full text-left motion-safe:transform-gpu motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:-translate-y-1"
       >
         {/* Image Card - distinct visual card, same style as project/startup cards */}
-        <div className="relative w-full overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg">
+        <div className="relative w-full overflow-hidden border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video">
           {!imageError ? (
             <Image
               src={coverImage}
@@ -52,15 +52,21 @@ export default function PostPreview({
               blurDataURL={BLUR_DATA_URL}
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+            <div
+              role="img"
+              aria-label={`Cover image unavailable for ${title}`}
+              className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-muted/50 p-4 text-center text-sm text-muted-foreground"
+            >
               <svg
                 className="w-10 h-10 text-muted-foreground/50"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14" />
               </svg>
+              <span>Cover image unavailable</span>
             </div>
           )}
         </div>

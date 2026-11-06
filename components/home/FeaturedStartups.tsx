@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { startups, type Startup } from "@/data/startups";
 import { BLUR_DATA_URL } from "@/lib/blur";
 import { startupQuips } from "@/lib/cursorQuips";
@@ -54,10 +55,10 @@ const FeaturedStartups = () => {
               <Link
                 href={`/startups/${startup.slug}`}
                 data-cursor-quip={startupQuips[startup.slug]}
-                className="flex flex-col w-full text-left transform-gpu transition-[transform] duration-300 ease-out hover:-translate-y-1 group"
+                className="flex flex-col w-full text-left group"
               >
-                {/* Image Card - distinct visual card with rounded corners and subtle styling */}
-                <div className="relative w-full overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg">
+                {/* Image and text share one native navigation link. */}
+                <div className="relative w-full overflow-hidden border border-border/80 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video">
                   {startup.screenshots && startup.screenshots.length > 0 ? (
                     <Image
                       src={startup.screenshots[0]}
@@ -94,7 +95,7 @@ const FeaturedStartups = () => {
                   <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
                     {startup.description}
                   </p>
-                  <span className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                     View startup
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -116,7 +117,7 @@ const FeaturedStartups = () => {
         >
           <Link
             href="/startups"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-3 font-semibold transition-all duration-300 ease-out hover:scale-105 shadow-sm hover:shadow-md"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 font-semibold transition-all duration-300 ease-out motion-safe:hover:scale-105"
           >
             View All Startups
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

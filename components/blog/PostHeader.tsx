@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import CoverImage from "./CoverImage";
+import DateFormatter from "./DateFormatter";
 
 type Props = {
   title: string;
@@ -16,14 +18,15 @@ export default function PostHeader({
   date,
   number,
 }: Props) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <>
       {number && (
         <motion.div
           className="mb-6"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          transition={shouldReduceMotion ? { duration: 0 } : {
             duration: 0.4,
             ease: [0.25, 0.46, 0.45, 0.94],
             delay: 0,
@@ -35,10 +38,10 @@ export default function PostHeader({
         </motion.div>
       )}
       <motion.h1
-        className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-8 text-foreground"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
+        className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 text-foreground"
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+        transition={shouldReduceMotion ? { duration: 0 } : {
           duration: 0.4,
           ease: [0.25, 0.46, 0.45, 0.94],
           delay: 0,
@@ -46,11 +49,14 @@ export default function PostHeader({
       >
         {title}
       </motion.h1>
+      <p className="text-sm text-muted-foreground mb-8">
+        <DateFormatter dateString={date} />
+      </p>
       <motion.div
         className="mb-8 md:mb-12"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+        transition={shouldReduceMotion ? { duration: 0 } : {
           duration: 0.33,
           ease: [0.25, 0.46, 0.45, 0.94],
           delay: 0.1,

@@ -1,214 +1,107 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { Globe, Sparkles, Zap, LayoutTemplate, Hammer, Rocket, User, Box, GitMerge } from "lucide-react";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { Globe, Layers3, Server, Database, Terminal, Code2, Bug, ArrowUpRight, Braces, Cpu } from "lucide-react";
 
-// ─── ExecutionCard (First Card) ───────────────────────────────────────────────
+// ─── ArchitectureCard (First Card) ────────────────────────────────────────────
 
-function ExecutionCard() {
+function ArchitectureCard() {
   const shouldReduceMotion = useReducedMotion();
-
-  const TOTAL_DURATION = 6;
+  const layers = [
+    { title: "Frontend", detail: "React · Next.js", icon: Globe },
+    { title: "Compute", detail: "APIs · Streaming", icon: Server },
+    { title: "Data & AI", detail: "Models · Databases", icon: Database },
+  ];
 
   return (
-    <div
-      className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card border border-border p-6 md:p-8 md:col-span-2 h-full min-h-[300px] hover:border-primary/20 transition-colors"
-      aria-label="Signal to Solution: Technical workflows that turn complex requirements into working integrations"
-    >
-      {/* Background grid */}
+    <div className="relative flex flex-col justify-between overflow-hidden bg-card border border-border p-6 md:p-8 h-full min-h-[300px] hover:border-primary/20 transition-colors">
       <div
         className="absolute inset-0 opacity-[0.08] pointer-events-none"
         style={{ backgroundImage: "radial-gradient(hsl(var(--foreground)) 1px, transparent 1px)", backgroundSize: "24px 24px" }}
         aria-hidden="true"
       />
 
-      {/* Header */}
-      <div className="relative z-10 mb-8 md:w-2/3">
+      <div className="relative z-10 mb-10 max-w-xl">
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-2 bg-muted/50 rounded-lg border border-border">
-            <Zap className="w-5 h-5 text-muted-foreground" />
+          <div className="p-2 bg-muted/50 border border-border">
+            <Layers3 className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
           </div>
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Velocity</span>
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Solutions Architect · Vercel</span>
         </div>
-        <h3 className="text-2xl font-medium text-foreground leading-tight">Signal to Solution</h3>
+        <h3 className="text-2xl font-medium text-foreground leading-tight">Architecture to Production</h3>
         <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
-        End-to-end technical workflows that turn raw inputs into actionable outcomes. Intake → webhook → enrichment → classification → the right team gets context, not just data.
+          At Vercel, I help teams design and ship production web and AI applications.
+          I work across rendering, caching, APIs, and infrastructure to connect architectural decisions to real product requirements.
         </p>
       </div>
 
-      {/* The Visual Pipeline */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-0 mt-auto px-2">
-        {/* Step 1: Concept */}
-        <div className="flex md:flex-col items-center gap-4 md:gap-3 relative z-10">
-          <div className="w-14 h-14 rounded-full bg-background border border-border shadow-sm flex items-center justify-center relative">
-            <LayoutTemplate className="w-6 h-6 text-muted-foreground" />
-            {!shouldReduceMotion && (
-              <motion.div
-                animate={{ boxShadow: ["0 0 0 0px hsl(var(--ring) / 0)", "0 0 0 6px hsl(var(--ring) / 0.2)", "0 0 0 0px hsl(var(--ring) / 0)"] }}
-                transition={{ duration: TOTAL_DURATION, times: [0, 0.1, 0.2], repeat: Infinity }}
-                className="absolute inset-0 rounded-full border border-ring/30"
-              />
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mt-auto">
+        {layers.map(({ title, detail, icon: Icon }, index) => (
+          <div key={title} className="relative flex md:flex-col items-center gap-4 md:gap-3">
+            {index < layers.length - 1 && (
+              <div aria-hidden="true" className="absolute left-7 top-14 h-8 w-px bg-border md:left-[calc(50%+2.5rem)] md:top-7 md:h-px md:w-[calc(100%-3.5rem)] overflow-hidden">
+                {!shouldReduceMotion && (
+                  <motion.div
+                    className="absolute inset-0 bg-foreground origin-top md:origin-left"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 4, delay: index * 0.5, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                )}
+              </div>
             )}
+            <div className={`w-14 h-14 shrink-0 border border-border flex items-center justify-center ${index === layers.length - 1 ? "bg-foreground text-primary-foreground" : "bg-background text-muted-foreground"}`}>
+              <Icon className="w-6 h-6" aria-hidden="true" />
+            </div>
+            <div className="flex flex-col md:items-center md:text-center">
+              <span className="text-sm font-semibold text-foreground">{title}</span>
+              <span className="text-xs text-muted-foreground mt-0.5">{detail}</span>
+            </div>
           </div>
-          <div className="flex flex-col md:items-center md:text-center">
-            <span className="text-sm font-semibold text-foreground">Intake</span>
-            <span className="text-[10px] text-muted-foreground">Capture</span>
-          </div>
-        </div>
-
-        {/* Connection 1: Desktop */}
-        <div className="hidden md:block flex-1 h-0.5 bg-border mx-4 relative overflow-hidden min-w-[20px]">
-          {!shouldReduceMotion && (
-            <motion.div
-              animate={{ width: ["0%", "100%", "100%", "0%"] }}
-              transition={{ duration: TOTAL_DURATION, times: [0, 0.25, 0.9, 1], repeat: Infinity, ease: "linear" as const }}
-              className="h-full bg-ring absolute left-0 top-0"
-            />
-          )}
-        </div>
-        {/* Connection 1: Mobile */}
-        <div className="absolute left-7 top-14 h-20 w-0.5 bg-border md:hidden overflow-hidden">
-          {!shouldReduceMotion && (
-            <motion.div
-              animate={{ height: ["0%", "100%", "100%", "0%"] }}
-              transition={{ duration: TOTAL_DURATION, times: [0, 0.25, 0.9, 1], repeat: Infinity, ease: "linear" as const }}
-              className="w-full bg-ring"
-            />
-          )}
-        </div>
-
-        {/* Step 2: Build */}
-        <div className="flex md:flex-col items-center gap-4 md:gap-3 relative z-10">
-          <div className="w-14 h-14 rounded-full bg-background border border-border shadow-sm flex items-center justify-center overflow-hidden">
-            {!shouldReduceMotion ? (
-              <motion.div
-                animate={{
-                  rotate: [0, -15, 0, -30, 0],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{ duration: TOTAL_DURATION, times: [0.25, 0.3, 0.35, 0.4, 0.5], repeat: Infinity }}
-              >
-                <Hammer className="w-6 h-6 text-muted-foreground" />
-              </motion.div>
-            ) : (
-              <Hammer className="w-6 h-6 text-muted-foreground" />
-            )}
-          </div>
-          <div className="flex flex-col md:items-center md:text-center">
-            <span className="text-sm font-semibold text-foreground">Enrich</span>
-            <span className="text-[10px] text-muted-foreground">Data</span>
-          </div>
-        </div>
-
-        {/* Connection 2: Desktop */}
-        <div className="hidden md:block flex-1 h-0.5 bg-border mx-4 relative overflow-hidden min-w-[20px]">
-          {!shouldReduceMotion && (
-            <motion.div
-              animate={{ width: ["0%", "0%", "100%", "100%", "0%"] }}
-              transition={{ duration: TOTAL_DURATION, times: [0, 0.5, 0.75, 0.95, 1], repeat: Infinity, ease: "linear" as const }}
-              className="h-full bg-ring absolute left-0 top-0"
-            />
-          )}
-        </div>
-        {/* Connection 2: Mobile */}
-        <div className="absolute left-7 top-[150px] h-20 w-0.5 bg-border md:hidden overflow-hidden">
-          {!shouldReduceMotion && (
-            <motion.div
-              animate={{ height: ["0%", "0%", "100%", "100%", "0%"] }}
-              transition={{ duration: TOTAL_DURATION, times: [0, 0.5, 0.75, 0.95, 1], repeat: Infinity, ease: "linear" as const }}
-              className="w-full bg-ring"
-            />
-          )}
-        </div>
-
-        {/* Step 3: Launch */}
-        <div className="flex md:flex-col items-center gap-4 md:gap-3 relative z-10">
-          <div className="w-14 h-14 rounded-full bg-foreground border border-border shadow-lg flex items-center justify-center">
-            {!shouldReduceMotion ? (
-              <motion.div
-                animate={{
-                  scale: [1, 1, 1.25, 1],
-                  color: ["hsl(var(--primary-foreground))", "hsl(var(--primary-foreground))", "hsl(var(--ring))", "hsl(var(--primary-foreground))"],
-                }}
-                transition={{ duration: TOTAL_DURATION, times: [0, 0.75, 0.85, 1], repeat: Infinity }}
-              >
-                <Rocket className="w-6 h-6" />
-              </motion.div>
-            ) : (
-              <Rocket className="w-6 h-6 text-primary-foreground" />
-            )}
-          </div>
-          <div className="flex flex-col md:items-center md:text-center">
-            <span className="text-sm font-semibold text-foreground">Deliver</span>
-            <span className="text-[10px] text-muted-foreground">Context</span>
-          </div>
-        </div>
+        ))}
       </div>
-
     </div>
   );
 }
 
-// ─── HumanCentricCard (Third Card) ────────────────────────────────────────────
+// ─── ImplementationCard (Third Card) ──────────────────────────────────────────
 
-function HumanCentricCard() {
+function ImplementationCard() {
+  const steps = [
+    { title: "Prototype", detail: "Make the idea tangible", icon: Code2 },
+    { title: "Debug", detail: "Find the actual constraint", icon: Bug },
+    { title: "Ship", detail: "Turn the proof into a product", icon: ArrowUpRight },
+  ];
+
   return (
-    <div
-      className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card border border-border p-6 h-full min-h-[300px] md:col-span-1 hover:border-primary/20 transition-colors"
-      aria-label="The Connector: Bridging technical and business teams with the context they need"
-    >
-      {/* Background: geometric texture */}
-      <div
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(hsl(var(--foreground)) 0.5px, transparent 0.5px)",
-          backgroundSize: "16px 16px",
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Header */}
-      <div className="relative z-10">
+    <div className="relative flex flex-col justify-between overflow-hidden bg-card border border-border p-6 h-full min-h-[300px] hover:border-primary/20 transition-colors">
+      <div>
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 bg-muted/50 rounded-md border border-border">
-            <GitMerge className="w-4 h-4 text-muted-foreground" />
+          <div className="p-1.5 bg-muted/50 border border-border">
+            <Terminal className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
           </div>
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Strategy</span>
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Implementation</span>
         </div>
-        <h3 className="text-xl font-medium text-foreground">The Connector</h3>
+        <h3 className="text-xl font-medium text-foreground">Hands-On Engineering</h3>
         <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-          I bridge engineering and business. Technical depth meets clear communication so teams focus on solutions, not guesswork.
+          I stay close to the code. I build prototypes, investigate failures, and turn an architectural plan into a working implementation.
         </p>
       </div>
 
-      {/* Visual: People <-> Product */}
-      <div className="relative z-10 flex-1 flex items-center justify-center mt-6">
-        <div className="flex items-center gap-6">
-          {/* Human side */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-full bg-muted/50 border border-border flex items-center justify-center shadow-sm">
-              <User className="w-6 h-6 text-muted-foreground" />
+      <ol className="mt-8 border-t border-border divide-y divide-border">
+        {steps.map(({ title, detail, icon: Icon }, index) => (
+          <li key={title} className="flex items-center gap-3 py-3 last:pb-0">
+            <div className={`flex h-9 w-9 shrink-0 items-center justify-center ${index === steps.length - 1 ? "bg-foreground text-primary-foreground" : "border border-border bg-background text-foreground"}`}>
+              <Icon className="h-4 w-4" aria-hidden="true" />
             </div>
-            <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Needs</span>
-          </div>
-
-          {/* Connection */}
-          <div className="flex flex-col items-center justify-center gap-1">
-            <div className="h-[1px] w-12 bg-ring/40 relative">
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1 bg-ring rounded-full" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-foreground">{title}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{detail}</p>
             </div>
-            <span className="text-[9px] font-mono text-ring font-medium">FIT</span>
-          </div>
-
-          {/* Product side */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-xl bg-foreground border border-border flex items-center justify-center shadow-lg">
-              <Box className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-[10px] uppercase tracking-wider font-semibold text-foreground">Solution</span>
-          </div>
-        </div>
-      </div>
+            <span aria-hidden="true" className="ml-auto text-[10px] font-mono text-muted-foreground">0{index + 1}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
@@ -220,7 +113,7 @@ function CommunityCard() {
 
   return (
     <div
-      className="col-span-1 md:col-span-2 relative overflow-hidden rounded-2xl bg-card border border-border p-6 md:p-8 flex flex-col justify-between hover:border-primary/20 transition-colors"
+      className="col-span-1 md:col-span-2 relative h-full overflow-hidden rounded-2xl bg-card border border-border p-6 md:p-8 flex flex-col justify-between hover:border-primary/20 transition-colors"
       aria-label="Community & Growth: Ecosystems that scale. Audiences, members, and customers"
     >
       {/* Background: Abstract network pattern */}
@@ -292,68 +185,55 @@ function CommunityCard() {
 
 
 function EngineeringCard() {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
-    <div
-      className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card border border-border p-6 md:p-8 md:col-span-1 h-full min-h-[300px] hover:border-primary/20 transition-colors"
-      aria-label="Technical Stack: Infrastructure that turns complexity into clarity. APIs, automation, integrations"
-    >
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" aria-hidden="true">
-        <svg className="w-full h-full" width="100%" height="100%">
-          <pattern id="engineering-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1" className="fill-foreground" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#engineering-grid)" />
-        </svg>
-      </div>
+    <div className="relative flex flex-col justify-between overflow-hidden bg-card border border-border p-6 md:p-8 h-full min-h-[300px] hover:border-primary/20 transition-colors">
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{ backgroundImage: "radial-gradient(hsl(var(--foreground)) 1px, transparent 1px)", backgroundSize: "20px 20px" }}
+        aria-hidden="true"
+      />
 
-      {/* Code editor visual */}
-      <div className="relative z-10 mt-2 md:mt-3 mb-4">
-        <div className="rounded-lg bg-neutral-950 border border-white/10 p-4 font-mono text-xs leading-relaxed shadow-2xl overflow-hidden">
-          <div className="flex gap-1.5 mb-3 opacity-50" aria-hidden="true">
-            <div className="w-2.5 h-2.5 rounded-full bg-neutral-600" />
-            <div className="w-2.5 h-2.5 rounded-full bg-neutral-600" />
-          </div>
-          <div className="text-neutral-400">
-            <span className="text-purple-400">const</span> <span className="text-yellow-200">Product</span> = () ={">"} {'{'}
-          </div>
-          <div className="pl-4 text-neutral-400">
-            <span className="text-neutral-500">{'// Modern Foundations'}</span>
-          </div>
-          <div className="pl-4 text-ring">
-            {'<'}NextImage <span className="text-neutral-400">src=</span>... {'/>'}
-          </div>
-          <div className="pl-4 mt-1 relative">
-            <div className="absolute inset-0 -mx-4 border-l-2 border-ring bg-ring/20 blur-[1px]" aria-hidden="true" />
-            <span className="text-white relative z-10 flex items-center gap-2">
-              {'<'}AI_Optimization {'/>'}
-              {!shouldReduceMotion && <Sparkles className="w-3 h-3 text-ring animate-pulse" aria-hidden="true" />}
-            </span>
-          </div>
-          <div className="text-neutral-400">{'}'}</div>
+      <div className="group/stack relative isolate overflow-hidden bg-foreground p-4 text-primary-foreground mb-6">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.08]"
+          style={{ backgroundImage: "linear-gradient(hsl(var(--primary-foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary-foreground)) 1px, transparent 1px)", backgroundSize: "20px 20px" }}
+        />
+        <div className="relative flex items-center justify-between gap-3 mb-4">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-primary-foreground/70">Application stack</p>
+          <Layers3 className="h-4 w-4 text-primary-foreground/60" aria-hidden="true" />
         </div>
+        <dl className="relative space-y-3 px-1 py-1">
+          <div className="flex items-center gap-3 translate-x-1 -rotate-2 border border-primary-foreground/30 bg-foreground p-3 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover/stack:rotate-0">
+            <Globe className="h-5 w-5 shrink-0 text-primary-foreground/70" aria-hidden="true" />
+            <div className="min-w-0">
+              <dt className="font-mono text-[9px] uppercase tracking-wider text-primary-foreground/60">01 / Frontend</dt>
+              <dd className="mt-1 text-xs font-medium">React + Next.js</dd>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 border border-primary-foreground/50 bg-foreground p-3">
+            <Braces className="h-5 w-5 shrink-0 text-primary-foreground/70" aria-hidden="true" />
+            <div className="min-w-0">
+              <dt className="font-mono text-[9px] uppercase tracking-wider text-primary-foreground/60">02 / Server</dt>
+              <dd className="mt-1 text-xs font-medium">TypeScript + Node.js</dd>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 -translate-x-1 rotate-2 border border-primary-foreground bg-background text-foreground p-3 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover/stack:rotate-0">
+            <Cpu className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <div className="min-w-0">
+              <dt className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">03 / AI</dt>
+              <dd className="mt-1 text-xs font-medium">AI SDK + AI Gateway</dd>
+            </div>
+          </div>
+        </dl>
       </div>
 
-      {/* Bottom section */}
       <div className="relative z-10">
-        <h3 className="text-xl font-medium text-foreground mb-2">
-          Technical Stack
-        </h3>
+        <h3 className="text-xl font-medium text-foreground mb-2">Full-Stack Web &amp; AI</h3>
         <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-          Supabase, n8n, Next.js, APIs, and AI agents on top. Building the integrations and infrastructure that let small teams operate like large ones.
+          Server rendering, caching, streaming, and AI integrations.
+          I work across the application stack to build fast, maintainable systems on Vercel.
         </p>
-        <div className="flex flex-wrap gap-2">
-          {["APIs", "n8n", "Supabase"].map((tech) => (
-            <span
-              key={tech}
-              className="px-2.5 py-1 rounded-md bg-foreground/5 border border-foreground/10 text-[10px] uppercase tracking-wider font-medium text-muted-foreground"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -399,7 +279,7 @@ const WhatIBuild = () => {
         <motion.h2
           id="bento-heading"
           className="sr-only"
-          initial="hidden"
+          initial={shouldReduceMotion ? "visible" : "hidden"}
           whileInView="visible"
           variants={containerVariants}
           viewport={{ once: true }}
@@ -410,19 +290,19 @@ const WhatIBuild = () => {
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6"
           variants={containerVariants}
-          initial="hidden"
+          initial={shouldReduceMotion ? "visible" : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           style={{ gridAutoRows: "minmax(300px, auto)" }}
         >
           <motion.div variants={cardVariants} className="col-span-1 md:col-span-2">
-            <ExecutionCard />
+            <ArchitectureCard />
           </motion.div>
           <motion.div variants={cardVariants} className="col-span-1">
             <EngineeringCard />
           </motion.div>
           <motion.div variants={cardVariants} className="col-span-1">
-            <HumanCentricCard />
+            <ImplementationCard />
           </motion.div>
           <motion.div variants={cardVariants} className="col-span-1 md:col-span-2">
             <CommunityCard />

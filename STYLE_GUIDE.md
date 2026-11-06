@@ -14,12 +14,12 @@ Core principles:
 
 1. **Cool near-white canvas with true-black ink.** A faintly cyan-tinted near-white background (`hsl(196 18% 98%)`) paired with a neutral pure-black foreground (`hsl(0 0% 0%)`) keeps the canvas soft and paper-like while the text/ink reads as a crisp, untinted black. Cards step *down* one shade, not up — there is no shadowed "elevated" card on a dark canvas.
 2. **One accent color, used sparingly.** A single deep blue (`hsl(225 100% 35%)`, exposed as `--ring` / `--nav-active`) is reserved for: the active nav pill, hover states, link accents, "tech tag" pills, decorative dots/rings, and small bursts of energy. Everything else is grayscale. Note `--primary` is true black, so filled CTAs read as black pills.
-3. **Sharp, flat surfaces (brutalist).** `--radius: 0` plus a global `@layer base` override force square corners and strip every shadow (including arbitrary `shadow-[…]` values). Components may still carry `rounded-*` / `shadow-*` classes for portability, but they render flat. Hover feedback comes from transforms (translate / scale) and border-color shifts, never elevation.
+3. **Sharp, flat surfaces (brutalist).** `--radius: 0` and a global base override force square corners and strip decorative shadows. New or revised components should omit ineffective radius/shadow utilities. Focus uses an actual outline, independent of shadows. Hover feedback comes from color and optional motion-safe transforms.
 4. **Big type, italic accents.** Hero headlines push to `text-9xl` with tight tracking. Subtitles routinely use `italic` + `font-medium` for a slightly editorial flavor.
-5. **Motion is choreographed, not decorative.** Almost every page composes a sequenced entrance: header (~0.1s) → title (~0.2s, `scale 0.9 → 1`) → subtitle (~0.4s) → grid fade-in (~0.6s) → cards stagger from index 0.7s onward in 0.15s steps. Hover is consistent: cards lift `-y: 8` (or `-4`/`-6`), durations 200–300ms, ease `[0.25, 0.46, 0.45, 0.94]`.
-6. **Image-first cards with text beneath, not on top.** The signature card pattern is a 16:9 image card with rounded-2xl border, then plain text *below* the card (title, meta, description). No overlays, no captions over images.
-7. **System-first, not page-first.** Every "filter pill bar," every "bento card," every modal, every section header reuses the same primitive classes. Pages compose; they do not redefine.
-8. **Reduced-motion respected everywhere.** `useReducedMotion()` is used at every motion entry point and `@media (prefers-reduced-motion: reduce)` is set globally.
+5. **Motion is progressive enhancement.** Server-rendered content is visible and static. Once the browser preference is known, standard-motion users get in-view reveals, filter transitions, and restrained hover feedback. Use the timing helpers in `lib/motion.ts`; content must not depend on an entrance animation becoming visible.
+6. **Image-first cards with text beneath, not on top.** The signature card pattern is a flat 16:9 bordered image with title, metadata, and description beneath it.
+7. **System-first, not page-first.** Filters, page headers, buttons, and image-card layouts reuse shared components. Pages supply content and layout-specific sizing.
+8. **Reduced motion is respected throughout.** Import the hydration-safe `useReducedMotion` from `@/hooks/useReducedMotion`. It defaults to static content during SSR/hydration and subscribes to browser preference changes. `MotionProvider` supplies `MotionConfig reducedMotion="user"` as a backstop; CSS handles CSS animations separately.
 
 ---
 
@@ -111,7 +111,7 @@ Tokens are then registered in Tailwind so utilities like `bg-background`, `text-
 | Primary CTA         | `primary` + `primary-foreground` | Filled buttons, "Get In Touch"                  |
 | Accent / link / dot | `primary` (= dark) **or** `ring` (= blue) | Hover title color, list bullets, link arrows |
 | Destructive         | `destructive`               | Inline errors only                                   |
-| Focus ring          | `ring`                      | Always visible, 2px, blue                            |
+| Focus outline       | `ring`                      | 2px blue outline, 3px offset; independent of box shadows |
 
 > **Important nuance:** in this system `--primary` is *true black* (`0 0% 0%`), not the brand blue. The brand blue is `--ring` / `--nav-active`. "Primary" buttons read as black filled pills; "accent" energy comes from `--ring` (blue) tints (`bg-ring/20`, `border-ring/40`, etc.).
 
@@ -164,40 +164,18 @@ Wrap article content in `<div className="max-w-2xl mx-auto">` for line length.
   * Section header → grid: `mb-12`
   * Card image → text: `mt-5`
   * Inside text block: `gap-1` for tight stacks, `mt-2`/`mt-3` for description
+* **Homepage section gaps:** hero → What I Build and What I Build → Featured Startups both use 128px of content-to-content separation (`pb-16` + `pt-16`). The hero is content-height, not viewport-height; do not add a minimum viewport height or viewport-based bottom padding that introduces extra blank space.
 * **Grid widths:** content max width is `max-w-7xl mx-auto` for grid sections. CTA / blog body: `max-w-3xl` / `max-w-4xl` / `max-w-2xl` (decreasing for prose). Tailwind container is centered with `padding: 2rem` and `2xl: 1400px`.
 * **Card grids:** the canonical responsive shape is `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8`. Two-column variant: `grid grid-cols-1 lg:grid-cols-2 gap-10`. Bento variant: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6` with selective `md:col-span-2`.
 
 ### 2.4 Border radius
 
-> **Live build note:** the shipped system is flat — `--radius: 0` and a global override force *all* corners square, so the `rounded-*` classes below render as `0`. The table documents the class vocabulary components still use (kept for portability); flip `--radius` and drop the override to re-enable rounding.
-
-Defined once via `--radius`, then composed:
-
-| Use                                     | Class                |
-| --------------------------------------- | -------------------- |
-| Pills, nav buttons, CTAs, dots          | `rounded-full`        |
-| Filter bar shell, "Connect" CTA         | `rounded-full`        |
-| Standard card (project, blog, brand)    | `rounded-2xl`         |
-| Big CTA / About card / hero info card   | `rounded-3xl`         |
-| Modal shell                             | `rounded-2xl sm:rounded-3xl` |
-| Inline chips, "Technologies" tags       | `rounded-full` (in chip pills) or `rounded-md` for tech badges |
-| Small icon backgrounds                  | `rounded-lg`          |
-| Micro icon containers                   | `rounded-md`          |
+The shipped system is square: `--radius: 0` plus the global override. Do not add `rounded-*` utilities to new flat surfaces. Older decorative markup may still carry them, but they do not change the rendered geometry.
 
 ### 2.5 Shadows
 
-> **Live build note:** shadows are globally disabled in the shipped build (flat brutalist look). The vocabulary below is retained in markup for portability but renders as `none`; remove the global override and restore the `--shadow-*` tokens to re-enable elevation.
+Decorative box shadows are globally disabled. Do not use shadow utilities for hover feedback or keyboard focus. Use border/color changes, optional motion-safe transforms, and the global focus outline instead.
 
-Three named shadows + a one-off card shadow (when enabled):
-
-* `shadow-card` — on all "image cards" via the literal class:
-  `shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)] transition-shadow duration-300 group-hover:shadow-lg`
-  (Note: it is hardcoded HSL because Tailwind arbitrary values don't read CSS variables in v3.)
-* `shadow-soft` — section CTAs, optional card lift
-* `shadow-medium` — modals (`shadow-2xl`)
-* `shadow-sm` / `shadow-md` — buttons (sm at rest, md on hover)
-
-Always pair shadow change with `transition-shadow` (or `transition-[transform,box-shadow]`) on `group-hover`.
 
 ### 2.6 Motion / transitions
 
@@ -245,7 +223,7 @@ The hero photo uses ambient slow `animate-[spin_20s_linear_infinite]` and `anima
 * **In-view reveal**: section heads use `whileInView` with `viewport={{ once: true, margin: "-40px" }}` and `initial={{ opacity: 0, y: 24 }}`.
 * **Header fade-up**: `initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}`.
 * **Title pop-in**: `initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, ..., delay: 0.2 }}`.
-* **Reduced motion**: read `useReducedMotion()` and gate all animation. Provide `initial="visible"` fallbacks. Globally:
+* **Reduced motion**: import `useReducedMotion` from `@/hooks/useReducedMotion`, not Framer Motion. Use `initial={false}` or visible variants while reduced; remove translation, scale, stagger, entrance delays, and hover lift. Use `motion-safe:` for CSS transforms. SSR/hydration defaults to reduced motion to keep markup consistent and content readable. Globally:
   ```css
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -265,9 +243,9 @@ These are set once in `globals.css` and assumed everywhere:
 * `@media (hover: none) { .group .group-hover\:opacity-100 { opacity: 1 } }` - touch devices keep hover-reveal CTAs visible.
 * **Scrollbars hidden** (`::-webkit-scrollbar { display: none; }`, `scrollbar-width: none`). The page is still scrollable.
 * `::selection { @apply bg-primary/15 text-foreground; }` (dark ink on the translucent-black wash - the reverse is unreadable)
-* Focus visible everywhere: `*:focus-visible { @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background; }`
+* Focus visible everywhere: `*:focus-visible { outline: 2px solid hsl(var(--ring)) !important; outline-offset: 3px; }`. Never implement focus with box shadows in this flat system.
 * `img { max-width: 100%; height: auto; }`
-* Body scroll-lock pattern when modals/sidebars open: toggle `document.body.style.overflow = 'hidden'` and `document.documentElement.style.overflow = 'hidden'`, restore on close.
+* Modal scroll locking, focus containment, Escape dismissal, and focus restoration belong to Radix Dialog or the lightbox library. Do not layer manual body overflow toggles over these primitives. Dialog surfaces use `data-lenis-prevent` to avoid smooth-scroll interference.
 
 ### 2.8 Iconography
 
@@ -281,11 +259,14 @@ These are set once in `globals.css` and assumed everywhere:
 
 ### 2.9 Imagery
 
-* **Always `next/image`** with `placeholder="blur"` and a shared `BLUR_DATA_URL` (a tiny base64 JPEG kept in `lib/blur.ts`). This prevents the flash/CLS while loading.
-* **Standard sizes:** `sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"` for grid cards; `sizes="600px"` inside modal carousels; `sizes="64px"` for thumbnails.
-* **Aspect ratios:** card images = `aspect-video` (16:9). Hero portrait = circular (`rounded-full`). Cover images for blog posts = `aspect-[21/10]`.
-* **Treatment:** the only non-trivial filter is on the hero portrait — `grayscale group-hover:grayscale-0 transition-all duration-700`. This is identity-defining; reuse it for any "primary person" image.
-* **Loading state:** keep `<Skeleton className="absolute inset-0" />` underneath, fade image opacity from 0→1 on `onLoad`.
+* **Use `next/image`** with known dimensions or a reserved aspect-ratio container. Blur placeholders improve loading appearance; they do not reserve layout by themselves.
+* **Responsive sizes:** supply `sizes` for the actual grid. Projects use one/two/three columns; Startups use one column until `lg`, then two. Account for page gutters and grid gaps rather than sharing a single hardcoded value.
+* **Detail media:** `AutoImage` reads intrinsic dimensions from `lib/projectImageSizes.ts`, sets an explicit aspect ratio, and retains the portrait width cap without cropping. Update that map when adding or replacing project images. Startup media uses `lib/brandImageSizes.ts`.
+* **Aspect ratios:** listing image cards use 16:9, article covers use 21:10, detail images preserve their source ratio. The hero portrait remains square in the shipped flat system.
+* **Treatment:** the hero portrait uses `grayscale group-hover:grayscale-0`.
+* **Loading and failure:** keep geometry stable, expose visible loading feedback, and replace failed article/gallery images with labelled “image unavailable” feedback. Do not hide the entire route fallback with `opacity-0`.
+* **Video:** use `components/projects/VideoPlayer.tsx`, not browser-native controls. `lib/projectVideoMetadata.ts` provides each source's dimensions and poster before loading, including portrait videos. Keep source files and posters in `public/projects/` and update the registry together. The minimal bar contains play/pause, a keyboard-operable timeline, time, mute, and fullscreen; controls remain visible with 44px targets and the timeline gets its own row on phones. Show the poster before playback, a small status while buffering, and an explicit failure message without collapsing the frame. Fullscreen uses the whole player where supported, with native video fullscreen as the Safari fallback.
+* **Source video defects:** repair unwanted borders in the encoded asset rather than hiding them with player cropping. Preserve the intended frame dimensions, frame timing, and audio; use browser-compatible H.264/AAC with faststart.
 
 ---
 
@@ -295,33 +276,12 @@ All components are styled with Tailwind only. The shadcn-style base lives in `co
 
 ### 3.1 Button (`components/ui/button.tsx`)
 
-A CVA-based button with **eight variants** and **four sizes**. The two custom variants (`nav`, `connect`) carry the brand identity.
+The canonical CVA variants and sizes live in `components/ui/button.tsx`. Reuse that implementation rather than copying a second class matrix. `nav` uses the neutral navigation surface; `connect` uses the blue accent. Focus comes from the global outline. Hover scale is `motion-safe` only.
 
 ```tsx
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default:     "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:     "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:   "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost:       "hover:bg-accent hover:text-accent-foreground",
-        link:        "text-primary underline-offset-4 hover:underline",
-        nav:         "bg-transparent text-nav-foreground hover:text-muted-foreground rounded-full px-4 py-2 transition-all duration-300 ease-out",
-        connect:     "bg-nav-active text-nav-active-foreground hover:bg-nav-active/90 rounded-full px-6 py-2 font-semibold shadow-sm hover:shadow-md transition-all duration-300 ease-out hover:scale-105",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm:      "h-9  rounded-md px-3",
-        lg:      "h-11 rounded-md px-8",
-        icon:    "h-10 w-10",
-      },
-    },
-    defaultVariants: { variant: "default", size: "default" },
-  },
-);
+<Button asChild variant="connect">
+  <Link href="/contact">Connect</Link>
+</Button>
 ```
 
 Conventions:
@@ -343,21 +303,13 @@ Used for image, modal, and thumbnail loading. Always positioned `absolute inset-
 
 ### 3.3 Navigation (`components/Navigation.tsx`)
 
-The header has **two layouts**: desktop is a full-width row with a centered floating "pill island," mobile is a logo + hamburger that opens a right-side sheet.
+The header switches at `lg` (1024px). Below that width, the identity and hamburger fit without colliding with a centered desktop nav.
 
-* **Outer header**: `w-full flex justify-between items-center px-4 md:px-8 pt-6 md:pt-8 pb-4 md:pb-2 relative`
-* **Brand block**: H1 `text-xl md:text-3xl font-bold` + tagline `text-muted-foreground text-xs md:text-base` linked to `/`.
-* **Desktop nav island** (signature element, reuse on every site):
-  ```tsx
-  <nav className="hidden md:flex items-center bg-nav/80 backdrop-blur-md border border-nav-border rounded-full px-2 py-2 fixed left-1/2 transform -translate-x-1/2 top-6 z-50">
-    {items.map((item) => (
-      <Link href={item.path}><Button variant="nav" size="sm" className={`mx-1 ${pathname === item.path ? "text-nav-active" : ""}`}>{item.name}</Button></Link>
-    ))}
-  </nav>
-  ```
-  Active state colors the *text* with `text-nav-active`; it does **not** add a pill background. Hover dims to `text-muted-foreground`.
-* **Connect CTA** sits to the right (`<Button variant="connect">`).
-* **Mobile sheet**: backdrop `bg-black/50 z-40`, panel `bg-background border-l border-border z-50 shadow-2xl w-[78vw] max-w-[320px]`. Spring transition: `{ type: "spring", damping: 28, stiffness: 280 }`. Header inside the panel uses an uppercase-tracked "Menu" label. Each row: `flex items-center px-4 py-3.5 rounded-xl text-base font-medium`, active `bg-primary/10 text-primary`, inactive `hover:bg-muted`. Items stagger in with `delay: 0.06 + index * 0.05`. Bottom of panel pins a full-width Connect button. Body scroll is locked while open and the menu auto-closes on route change (`useEffect` on `pathname`).
+* **Outer header:** `px-4 md:px-8` with the identity linked to `/`.
+* **Desktop nav:** centered and fixed on listing pages, absolute on detail pages. Each destination is a single `<Button asChild><Link /></Button>`, never a button nested in a link.
+* **Active section:** exact path or descendant path; both desktop and mobile use `bg-nav-active/10 text-nav-active`. Use `aria-current="page"` for the exact destination and `"location"` for its parent section on a detail page.
+* **Mobile menu:** controlled Radix Dialog with a labelled title, right-aligned `h-dvh w-[78vw] max-w-[320px]` panel, 44px close/open targets, and a bottom Connect link. Opening transfers focus inside; Tab remains inside; Escape/backdrop dismisses; closing restores focus. It closes on route change or when resizing to desktop.
+* **Motion:** the panel is immediately usable, with no staggered focusable links. The backdrop respects the global reduced-motion CSS.
 
 ### 3.4 Footer (`components/Footer.tsx`)
 
@@ -373,16 +325,13 @@ There are **five distinct card archetypes**. Don't invent a sixth — compose fr
 
 #### A. Image card with text below (signature)
 
-Used by: `ProjectCard`, `PostPreview`, `BrandCards`, featured "Startups" on home.
+Used by `ShowcaseCard`, `PostPreview`, and featured startups. Navigating is a link action, not a button action.
 
 ```tsx
-<button className="w-full text-left flex flex-col cursor-pointer group transform-gpu transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1">
+<Link href={href} className="w-full text-left flex flex-col group">
   {/* Image card */}
-  <div className="relative w-full overflow-hidden rounded-2xl border border-border/80
-                  bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30
-                  shadow-[0_2px_12px_hsl(0_0%_0%_/_0.08)]
-                  transition-shadow duration-300 group-hover:shadow-lg
-                  aspect-video">
+  <div className="relative w-full overflow-hidden border border-border/80
+                  bg-gradient-to-br from-muted/20 via-muted/10 to-muted/30 aspect-video">
     <Image fill placeholder="blur" blurDataURL={BLUR_DATA_URL} className="object-cover" />
   </div>
 
@@ -396,26 +345,26 @@ Used by: `ProjectCard`, `PostPreview`, `BrandCards`, featured "Startups" on home
     </p>
     <p className="text-sm text-muted-foreground/90 leading-relaxed mt-2 line-clamp-2">{description}</p>
 
-    {/* Reveal-on-hover affordance */}
-    <span className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+    {/* Reveal on hover and keyboard focus; also visible on touch devices. */}
+    <span className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
       View Project <ChevronRight className="w-3.5 h-3.5" />
     </span>
   </div>
-</button>
+</Link>
 ```
 
 Key invariants:
 
-* Image is wrapped in a *separate* visual card (the `border + gradient + shadow` block). Title/meta sit **outside** this block, separated by `mt-5`.
-* Hover lifts the whole `group` by `-y-1` via Tailwind, plus an additional `-y: 8` from the parent `motion.div` `whileHover` (they compose).
-* "View … →" affordance fades in on hover instead of being permanently visible.
+* Image and text share one primary native link. If a card has additional actions, put that link and the actions in a noninteractive `article` as siblings; never intercept keyboard events on the container.
+* Use one restrained hover lift, disabled for reduced motion. Do not stack CSS translation and Framer Motion translation on the same card.
+* “View …” is visible on hover, focus-within, and touch. Secondary actions such as “View Website” remain independently keyboard-accessible and preserve native new-tab behavior.
 
 #### B. Solid info card (About / Contact / CTA)
 
 A flat surface with optional icon, no image:
 
 ```tsx
-<div className="bg-card border border-border rounded-3xl p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+<div className="bg-card border border-border p-5 sm:p-6 lg:p-8">
   <div className="w-16 h-16 text-primary mb-6">{icon}</div>
   <h3 className="text-2xl font-bold text-foreground mb-4">{title}</h3>
   <p className="text-muted-foreground leading-relaxed">{description}</p>
@@ -424,10 +373,13 @@ A flat surface with optional icon, no image:
 
 Variants:
 
-* **Centered** (Contact): same shell, `text-center`, with the icon in a `w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center` chip.
-* **Big CTA card**: `bg-card backdrop-blur-md border border-border rounded-3xl p-12 max-w-4xl mx-auto`, headline `text-3xl font-bold`, body `text-muted-foreground max-w-2xl mx-auto`, then a single primary-pill button.
+* **About grid:** one phone column, two tablet columns, three desktop columns. Keep title and body measures readable with responsive card padding.
+* **Centered Contact cards:** one column on phones, two from `sm`, four from `xl`; `min-w-0 flex flex-col text-center`, wrapping long handles with `overflow-wrap:anywhere`, and actions with `mt-auto`. Use destination-specific labels such as “Send email” and “View GitHub”; only web destinations open new tabs.
+* **Big CTA card:** `bg-card border border-border p-6 sm:p-12 max-w-4xl mx-auto`, headline `text-3xl`, body `text-muted-foreground max-w-2xl mx-auto`, then one primary action.
 
 #### C. Bento card (large, decorated)
+
+The homepage cards have distinct roles. “Architecture to Production” communicates solutions architecture at Vercel through a Frontend → Compute → Data & AI diagram. “Full-Stack Web & AI” uses a monochrome stack of offset panels, a subtle grid, technical icons, and an inverted AI layer. Hover alignment is motion-safe only. “Hands-On Engineering” covers prototyping, debugging, and implementation rather than repeating architecture or stakeholder alignment. “Community & Growth” retains its content, and both second-row surfaces stretch to equal heights. Use direct copy without em dashes, readable narrow-screen labels, and the shared reduced-motion preference.
 
 Used in the home "What I Build" grid. Roughly 2 sizes mixed (`md:col-span-2` + `md:col-span-1`) with `gridAutoRows: "minmax(300px, auto)"`. Each card:
 
@@ -529,27 +481,20 @@ Different from cards A/B/C: corners are `rounded-lg`, hover dims with a black ov
 
 ### 3.6 Filter bar
 
-The pill filter shell is reused on Projects and Photography. Always centered (or right-aligned on Projects ≥ md):
+Use `FilterBar` for Projects and Photography:
 
 ```tsx
-<div className="flex flex-wrap items-center justify-center gap-3 bg-card border border-border rounded-full p-2 max-w-full">
-  {tabs.map(tab => (
-    <button
-      onClick={() => onPick(tab)}
-      className={cn(
-        "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
-        isActive
-          ? "bg-primary text-primary-foreground shadow-sm"
-          : "text-muted-foreground hover:text-foreground hover:bg-muted",
-      )}
-    >
-      {tab}
-    </button>
-  ))}
-</div>
+<FilterBar
+  label="Project categories"
+  tabs={categories}
+  activeFilter={activeFilter}
+  onFilterChange={setActiveFilter}
+/>
 ```
 
-Mobile-tighter variant uses `gap-1.5 sm:gap-2`, outer `rounded-2xl sm:rounded-full p-1.5 sm:p-2`, inner `px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm`.
+The labelled group contains native buttons with `aria-pressed`, wrapping layout, and minimum 44px height. The page supplies a polite result-count status near its results. These are filters, not ARIA tabs.
+
+Photography stores category/slide state in the URL. Opening a photo pushes one marked history entry, slide changes replace it, and closing returns to the preceding gallery entry. A directly loaded photo URL closes by replacement rather than leaving the site.
 
 ### 3.7 Tag / chip vocabulary
 
@@ -595,9 +540,9 @@ A vertical timeline with a left rail.
   </div>
   ```
 * **Rail:** `absolute left-8 top-0 bottom-0 w-0.5 bg-border`.
-* **Item:** dot `absolute left-6 w-4 h-4 bg-primary rounded-full border-4 border-background z-10`; content offset by `ml-16` in `bg-card backdrop-blur-md border border-border rounded-2xl p-6 w-full`.
+* **Item:** use compact phone rail offsets and padding, restoring wider spacing at `sm`; keep content and dates readable rather than spending narrow-screen width on the rail.
 * **Item meta row:** `flex flex-col md:flex-row md:items-center md:justify-between mb-3` — title `text-xl font-bold text-foreground`, subtitle `text-primary font-medium`, date `text-primary font-medium text-sm md:text-base`.
-* **Reveal:** each item `motion.div` with `useInView({ once: true, margin: "-50px 0px" })`, `initial={{ opacity: 0, x: -30 }}` → animate, stagger `index * 0.1`. `whileHover={{ scale: 1.02 }}`.
+* **Reveal:** use in-view motion only for standard-motion users. Reduced-motion content is already visible, with no horizontal entrance, stagger, or hover scale.
 
 ### 3.10 Hero diagram (signature)
 
@@ -619,7 +564,7 @@ The home hero is a full system in itself. Reuse on a new site as a "manifesto bl
 * Outer wrapper: `<div className="min-h-screen bg-background text-foreground">` → `<main className="px-4 md:px-20 pt-8 pb-16">`.
 * Back link strip: `pt-2 pb-4` containing a `max-w-4xl mx-auto` link with `<ArrowLeft />` and `text-muted-foreground hover:text-foreground`.
 * Article: `pt-6 pb-12 md:pb-16 w-full` then `max-w-4xl mx-auto`.
-* Header: `<PostHeader />` shows an oversized tabular post number (`text-5xl md:text-6xl font-bold tabular-nums text-muted-foreground/50`) above a `text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight` title, then a 21:10 cover image (`rounded-lg`).
+* Header: `<PostHeader />` shows the post number, title, publication date through `DateFormatter`, and a reserved 21:10 cover with loading/error feedback.
 * Body: `prose prose-lg prose-slate ... max-w-none` inside `max-w-2xl mx-auto`.
 * Prev/Next: a top-bordered nav with two `Link`s carrying small uppercase eyebrows ("Previous" / "Next") above the truncated post title.
 
@@ -640,40 +585,17 @@ Every non-home page follows the same four-line skeleton:
 </div>
 ```
 
-The page header is itself standardized - and ships as `components/PageHeader.tsx`
-(`title`, optional `subtitle`, `className` for the section margin). Detail pages
-(blog post, project/startup case study) share `components/BackLink.tsx`
-(`pill` floating variant, `plain` rail variant). The header markup:
+Use `components/PageHeader.tsx` rather than duplicating its motion markup:
 
 ```tsx
-<motion.section
-  className="text-center mb-16"
-  initial={{ opacity: 0, y: 30 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}
->
-  <motion.h1
-    className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground leading-none"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
-  >
-    {pageTitle}
-  </motion.h1>
-  <motion.p
-    className="text-xl text-muted-foreground mt-6 max-w-3xl mx-auto"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.4 }}
-  >
-    {pageSubtitle}
-  </motion.p>
-</motion.section>
+<PageHeader title={title} subtitle={subtitle} className="text-center mb-12" />
 ```
 
-The filter block (when present) sits inside its own `motion.section` with `delay: 0.4`, classNames `flex justify-center md:justify-end mb-12` (Projects), or `flex justify-center mb-12` (Photography).
+It handles the hydration-safe motion preference. Photography passes `animate={false}` because the loading fallback already shows the stable heading. Route fallbacks show visible skeletons/status instead of a blank content area.
 
-The content grid block uses `delay: 0.6` for the wrapping `motion.section` and `delay: 0.7 + index * 0.15` for first-paint cards. `AnimatePresence mode="wait"` keyed on the active filter handles re-paints.
+Detail pages share `components/BackLink.tsx` (`pill` bordered-surface variant, `plain` rail variant). Positioning belongs to the page wrapper. Filters remain centered or right-aligned on Projects from `md`. Use shared motion helpers for optional standard-motion transitions; reduced-motion grids have no delay or stagger.
+
+Project detail pages keep “Back to Projects” in normal document flow, not sticky. End each project with image-backed Previous/Next links after any external project CTA. Follow the Projects listing order and wrap the first/last entries so browsing continues in either direction. Cards use real project thumbnails, side-by-side desktop layout, stacked phone layout, and native links with descriptive accessible labels.
 
 ---
 
@@ -709,13 +631,13 @@ Reveal CTA:             inline-flex items-center gap-1.5 mt-3 text-sm font-mediu
 
 These are non-negotiable in this system:
 
-* `focus-visible` ring is **always** on (`ring-2 ring-ring ring-offset-2 ring-offset-background`).
+* Keyboard focus always has a visible blue outline; decorative shadow suppression must not remove it.
 * Decorative SVGs/divs use `aria-hidden="true"` and `pointer-events-none`.
-* Keyboard activation on card-as-`role="button"` (e.g. `BrandCards`): handle `Enter` and `Space`.
-* Use `<button>` not `<div>` for clickable cards (`ProjectCard` already does this; copy that pattern).
-* Modals: `Escape` closes; backdrop click closes; body scroll locked; focus is trapped inside (Radix dialog if you ever need a more rigorous version).
+* Navigation uses native links, including cards. Actions use native buttons. Never nest interactive descendants inside another interactive control.
+* Filter selection is exposed with `aria-pressed`; changes have a concise polite result announcement.
+* Modals use established primitives: Escape/backdrop dismissal, scroll lock, focus containment, and focus restoration are required.
 * `touch-manipulation` is added to anything with `min-w-[44px] min-h-[44px]` tap targets (especially modal nav arrows and mobile menu controls).
-* Reduced motion always respected — never animate unconditionally.
+* Reduced motion uses the hydration-safe shared hook plus `MotionProvider`; disable transforms, delays, and stagger, not just CSS durations.
 * Images always carry meaningful `alt` text; cover images use `Cover image for {title}`; thumbnails use `Thumbnail {n}`; skeletons appear *under* the image rather than blocking.
 * Smooth scroll + scrollbars hidden = *no* JS scrollbars exposed; do not add custom scrollbars on top of that.
 
@@ -747,7 +669,7 @@ Use this as a literal copy/paste order when starting a new site in this style.
 8. **Add `Navigation.tsx` + `Footer.tsx`** verbatim (with new nav items) — these define the brand surface.
 9. **Compose pages** using the §4 page skeleton + §5 cheat sheet.
 10. **Use card archetype A** for any "list of things with images." Use B for "info tiles." Use C only for a true bento moment. Reuse the modal shell (3.8) and timeline (3.9) when needed.
-11. **Animate** every page using the standard sequence: header (0.1) → title (0.2, scale 0.9→1) → subtitle (0.4) → filter (0.4) → grid wrap (0.6) → cards (0.7 + i·0.15). Re-render swaps via `<AnimatePresence mode="wait">` keyed on filter, dropping to `0.2 + i·0.08` after first mount.
-12. **Run an a11y pass:** focus rings, `aria-hidden` on decoration, `<button>` for clickable cards, modal Escape/backdrop, reduced-motion fallbacks, 44×44 touch targets in modals.
+11. **Enhance with motion** using the helpers in `lib/motion.ts` and the hydration-safe preference hook. Content starts readable; reduced-motion users receive no transform animations or delays.
+12. **Run an accessibility pass:** visible focus outlines, native navigation links/action buttons, modal Escape/backdrop/focus restoration, reduced-motion direct loads, filter state, image loading/error feedback, and 44px touch targets.
 
 If you stick to these primitives — the eight tokens, the five card archetypes, the standard motion sequence, and the page skeleton — any new site will look and feel like this one without copying a single line of page content.

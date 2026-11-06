@@ -159,9 +159,10 @@ All colors MUST be HSL.
     @apply bg-primary/15 text-foreground;
   }
 
-  /* Focus styles */
+  /* Outlines remain visible when decorative box shadows are disabled. */
   *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    outline: 2px solid hsl(var(--ring)) !important;
+    outline-offset: 3px;
   }
 
   /* Prevent layout shifts from images */
@@ -194,4 +195,50 @@ body.content-cursor-active *,
 body.content-cursor-active *::before,
 body.content-cursor-active *::after {
   cursor: none !important;
+}
+
+/* Minimal media timeline: a thin track with a keyboard-visible native range input. */
+.video-progress {
+  appearance: none;
+  background-color: transparent;
+  background-size: 100% 2px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.video-progress::-webkit-slider-runnable-track {
+  height: 2px;
+  background: transparent;
+}
+
+.video-progress::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  margin-top: -4px;
+  background: hsl(var(--foreground));
+}
+
+.video-progress::-moz-range-track {
+  height: 2px;
+  background: transparent;
+}
+
+.video-progress::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  background: hsl(var(--foreground));
+}
+
+.video-player:fullscreen {
+  display: flex;
+  flex-direction: column;
+  max-width: none;
+}
+
+.video-player:fullscreen .video-frame {
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: auto !important;
 }

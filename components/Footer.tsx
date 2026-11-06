@@ -13,7 +13,7 @@ const contactLinks = [
   { label: "Email", href: "mailto:williamarmstrong8@gmail.com", icon: Mail },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/william-armstrong8/", icon: Linkedin },
   { label: "GitHub", href: "https://github.com/williamarmstrong8", icon: Github },
-  { label: "X", href: "https://x.com/armstrongwill8", icon: null },
+  { label: "X", href: "https://x.com/armstrongships", icon: null },
 ];
 
 export default function Footer() {

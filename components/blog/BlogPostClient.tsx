@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import BackLink from "@/components/BackLink";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
 
@@ -28,15 +29,16 @@ export default function BlogPostClient({
   prevPost = null,
   nextPost = null,
 }: BlogPostClientProps) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <>
       {/* Sticky back button — w-fit so it never covers the fixed center nav */}
       <div className="sticky top-6 z-40 mb-6 w-fit">
         <motion.div
           className="inline-block"
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
+          initial={shouldReduceMotion ? false : { opacity: 0, y: -12 }}
+          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          transition={shouldReduceMotion ? { duration: 0 } : {
             duration: 0.33,
             ease: [0.25, 0.46, 0.45, 0.94],
             delay: 0.07,
@@ -59,9 +61,9 @@ export default function BlogPostClient({
           </div>
           <motion.div
             className="mt-12"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            transition={shouldReduceMotion ? { duration: 0 } : {
               duration: 0.33,
               ease: [0.25, 0.46, 0.45, 0.94],
               delay: 0.33,

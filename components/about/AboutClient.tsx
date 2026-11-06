@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Briefcase, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import AboutCard from "@/components/AboutCard";
 import Timeline from "@/components/Timeline";
 import PageHeader from "@/components/PageHeader";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { EASE } from "@/lib/motion";
 
 export default function AboutClient() {
+  const shouldReduceMotion = useReducedMotion();
   // About cards data (do not change)
   const aboutCards = [
     {
@@ -137,15 +139,15 @@ export default function AboutClient() {
 
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <main className="px-4 md:px-20 pt-8 pb-16">
+      <main className="px-4 md:px-8 lg:px-20 pt-8 pb-16">
         <PageHeader title="About Me" />
 
-        {/* About Cards (unchanged) */}
+        {/* About Cards */}
         <motion.section
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
-          initial={{ opacity: 0 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12 md:mb-20"
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{
+          transition={shouldReduceMotion ? { duration: 0 } : {
             duration: 0.2,
             delay: 0.4,
           }}
@@ -153,18 +155,14 @@ export default function AboutClient() {
           {aboutCards.map((card, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                transition: {
-                  duration: 0.27,
-                  delay: 0.47 + index * 0.067,
-                  ease: EASE,
-                },
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20, scale: 0.9 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+              transition={shouldReduceMotion ? { duration: 0 } : {
+                duration: 0.27,
+                delay: 0.47 + index * 0.067,
+                ease: EASE,
               }}
-              whileHover={{
+              whileHover={shouldReduceMotion ? undefined : {
                 y: -4,
                 transition: { duration: 0.2 },
               }}
@@ -178,12 +176,12 @@ export default function AboutClient() {
           ))}
         </motion.section>
 
-        {/* Restructured Timeline: Work Experience Only */}
+        {/* Experience, education, and service */}
         <motion.div
-          className="space-y-20"
-          initial={{ opacity: 0 }}
+          className="space-y-12 md:space-y-20"
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{
+          transition={shouldReduceMotion ? { duration: 0 } : {
             duration: 0.2,
             delay: 0.6,
           }}
@@ -216,36 +214,36 @@ export default function AboutClient() {
           />
         </motion.div>
 
-        {/* Call to Action (unchanged) */}
+        {/* Call to Action */}
         <motion.section
-          className="mt-20 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
+          className="mt-12 md:mt-20 text-center"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
+          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          transition={shouldReduceMotion ? { duration: 0 } : {
             duration: 0.33,
             ease: EASE,
             delay: 1.2,
           }}
         >
           <motion.div
-            className="bg-card backdrop-blur-md border border-border rounded-3xl p-12 max-w-4xl mx-auto"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
+            className="bg-card backdrop-blur-md border border-border p-5 sm:p-8 md:p-12 max-w-4xl mx-auto"
+            initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+            transition={shouldReduceMotion ? { duration: 0 } : {
               duration: 0.27,
               ease: EASE,
               delay: 1.27,
             }}
-            whileHover={{
+            whileHover={shouldReduceMotion ? undefined : {
               scale: 1.02,
               transition: { duration: 0.2 },
             }}
           >
             <motion.h2
               className="text-3xl font-bold text-foreground mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              transition={shouldReduceMotion ? { duration: 0 } : {
                 duration: 0.27,
                 ease: EASE,
                 delay: 1.33,
@@ -255,9 +253,9 @@ export default function AboutClient() {
             </motion.h2>
             <motion.p
               className="text-muted-foreground mb-8 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              transition={shouldReduceMotion ? { duration: 0 } : {
                 duration: 0.27,
                 ease: EASE,
                 delay: 1.4,
@@ -268,9 +266,9 @@ export default function AboutClient() {
               together.
             </motion.p>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              transition={shouldReduceMotion ? { duration: 0 } : {
                 duration: 0.27,
                 ease: EASE,
                 delay: 1.47,
@@ -279,7 +277,7 @@ export default function AboutClient() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-full px-8 h-12 text-base font-semibold shadow-sm hover:shadow-md transition-all duration-300"
+                className="px-6 sm:px-8 h-12 text-base font-semibold"
               >
                 <Link href="/contact">Get In Touch</Link>
               </Button>

@@ -1,6 +1,6 @@
 export type MediaItem =
   | { type: "image"; src: string }
-  | { type: "video"; src: string; poster?: string };
+  | { type: "video"; src: string };
 
 export interface Metric {
   label: string;
@@ -25,16 +25,14 @@ export interface ShowcaseSectionData {
 export function buildMediaItems({
   images,
   videos,
-  videoPoster,
 }: {
   images?: string[];
   videos?: string[];
-  videoPoster?: string;
 }): MediaItem[] {
   return [
     ...(images ?? []).map((src): MediaItem => ({ type: "image", src })),
     ...(videos ?? []).map(
-      (src): MediaItem => ({ type: "video", src, poster: videoPoster })
+      (src): MediaItem => ({ type: "video", src })
     ),
   ];
 }

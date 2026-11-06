@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "William Armstrong | Portfolio",
   description:
-    "William Armstrong — Solutions Engineer & architect who bridges product, engineering, and business. Automation, integrations, and systems thinking. Explore projects, startups, and writing.",
+    "William Armstrong, Solutions Architect at Vercel. Building production web and AI applications across architecture, engineering, and product. Explore projects, startups, and writing.",
   alternates: { canonical: "/" },
 };
 

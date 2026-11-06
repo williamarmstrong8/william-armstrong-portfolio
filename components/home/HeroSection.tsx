@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type { Variants } from "framer-motion";
 import Image from "next/image";
 import { BLUR_DATA_URL } from "@/lib/blur";
@@ -30,8 +31,8 @@ const HeroSection = () => {
       pathLength: 1,
       opacity: 1,
       transition: {
-        pathLength: { delay: custom, duration: 0.8, ease: "easeInOut" },
-        opacity: { delay: custom, duration: 0.17, ease: "easeOut" },
+        pathLength: { delay: shouldReduceMotion ? 0 : custom, duration: shouldReduceMotion ? 0 : 0.8, ease: "easeInOut" },
+        opacity: { delay: shouldReduceMotion ? 0 : custom, duration: shouldReduceMotion ? 0 : 0.17, ease: "easeOut" },
       },
     }),
   };
@@ -42,8 +43,8 @@ const HeroSection = () => {
       opacity: 1,
       y: 0,
       transition: {
-        delay: custom,
-        duration: 0.47,
+        delay: shouldReduceMotion ? 0 : custom,
+        duration: shouldReduceMotion ? 0 : 0.47,
         ease: "easeOut",
       },
     }),
@@ -51,14 +52,14 @@ const HeroSection = () => {
 
   return (
     <main
-      className="relative min-h-svh flex flex-col items-center justify-start overflow-hidden bg-background pt-[clamp(1rem,3.5vh,2.5rem)] pb-[clamp(2rem,5vh,4rem)] px-6 md:px-20"
+      className="relative flex flex-col items-center justify-start overflow-hidden bg-background pt-[clamp(1rem,3.5vh,2.5rem)] pb-16 px-6 md:px-20"
     >
       {/* Header Content */}
       <div className="w-full text-center mb-[clamp(3rem,9vh,7rem)] z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.53, ease: "easeOut" }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.53, ease: "easeOut" }}
         >
           <h1 className="font-bold text-foreground leading-[1.05] tracking-tight text-[clamp(2.25rem,min(8.5vw,13vh),7.5rem)] px-4 md:px-8">
             William Armstrong
@@ -73,15 +74,15 @@ const HeroSection = () => {
             </p>
 
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.53, duration: 0.67 }}
+              transition={{ delay: shouldReduceMotion ? 0 : 0.53, duration: shouldReduceMotion ? 0 : 0.67 }}
               className="mt-[clamp(1rem,3vh,2rem)] flex flex-wrap justify-center gap-3"
             >
               <Button
                 asChild
                 size="lg"
-                className="rounded-full px-8 h-12 text-base font-semibold shadow-sm hover:shadow-md transition-all duration-300"
+                className="px-8 h-12 text-base font-semibold transition-colors duration-300"
               >
                 <Link href="/startups">View Startups</Link>
               </Button>
@@ -89,7 +90,7 @@ const HeroSection = () => {
                 asChild
                 variant="outline"
                 size="lg"
-                className="rounded-full px-8 h-12 text-base font-semibold transition-all duration-300"
+                className="px-8 h-12 text-base font-semibold transition-colors duration-300"
               >
                 <Link href="/projects">Explore Projects</Link>
               </Button>
@@ -108,8 +109,8 @@ const HeroSection = () => {
             initial={shouldReduceMotion ? "visible" : "hidden"}
             animate="visible"
             custom={0.25}
-            whileHover={{ y: -6 }}
-            className="group relative flex flex-col rounded-3xl border border-border bg-card/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 w-full lg:w-[360px] xl:w-[380px] p-6"
+            whileHover={shouldReduceMotion ? undefined : { y: -6 }}
+            className="group relative flex flex-col border border-border bg-card/50 backdrop-blur-sm w-full lg:w-[360px] xl:w-[380px] p-6"
           >
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-60" />
 
@@ -147,12 +148,12 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Center Image - Centered Focal Point (✅ fixed hover) */}
+          {/* Center portrait */}
           <div ref={imageWrapperRef} className="relative z-20 group" data-cursor-quip="that's me">
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.6, delay: shouldReduceMotion ? 0 : 0.1, ease: "easeOut" }}
               className="relative w-[clamp(9rem,min(22vw,28vh),18rem)] h-[clamp(9rem,min(22vw,28vh),18rem)]"
             >
               {/* Image */}
@@ -177,8 +178,8 @@ const HeroSection = () => {
               </div>
 
               {/* Decorative subtle rings */}
-              <div className="pointer-events-none absolute -inset-4 border border-primary/5 rounded-full animate-[spin_20s_linear_infinite]" />
-              <div className="pointer-events-none absolute -inset-8 border border-primary/5 rounded-full animate-[spin_30s_linear_infinite_reverse]" />
+              <div className="pointer-events-none absolute -inset-4 border border-primary/5 motion-safe:animate-[spin_20s_linear_infinite]" />
+              <div className="pointer-events-none absolute -inset-8 border border-primary/5 motion-safe:animate-[spin_30s_linear_infinite_reverse]" />
             </motion.div>
 
             {/* Soft background glow */}
@@ -192,8 +193,8 @@ const HeroSection = () => {
             initial={shouldReduceMotion ? "visible" : "hidden"}
             animate="visible"
             custom={0.4}
-            whileHover={{ y: -6 }}
-            className="group relative flex flex-col rounded-3xl border border-border bg-card/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 w-full lg:w-[360px] xl:w-[380px] p-6 text-right items-end"
+            whileHover={shouldReduceMotion ? undefined : { y: -6 }}
+            className="group relative flex flex-col border border-border bg-card/50 backdrop-blur-sm w-full lg:w-[360px] xl:w-[380px] p-6 text-right items-end"
           >
             <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-60" />
 

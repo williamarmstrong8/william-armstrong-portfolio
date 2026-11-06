@@ -94,7 +94,7 @@ export default function SectionGuide({ className }: { className?: string }) {
                   "block border-l-2 pl-3 -ml-px text-[15px] md:text-base leading-snug transition-colors",
                   isActive
                     ? "border-foreground text-foreground font-medium"
-                    : "border-transparent text-muted-foreground/50 hover:text-muted-foreground",
+                    : "border-transparent text-muted-foreground hover:text-foreground focus-visible:text-foreground",
                 )}
               >
                 {item.label}

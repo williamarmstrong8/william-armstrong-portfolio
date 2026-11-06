@@ -11,7 +11,6 @@ export interface Project extends ShowcaseSectionData {
   thumbnail?: string;
   images?: string[];
   videos?: string[];
-  videoPoster?: string;
   link?: string;
   github?: string;
 }
@@ -144,7 +143,6 @@ export const projects: Project[] = [
     videos: [
       "/projects/action-button-automation/action-button-automation.mp4"
     ],
-    videoPoster: "/projects/action-button-automation/automation-cover.png",
     description: "An n8n automation workflow, self-hosted on PikaPods, that syncs Google Calendar meeting data into a Notion Networking Hub as a personal CRM engine.",
     longDescription: "I built an n8n automation workflow, self-hosted on PikaPods, that acts as a personal CRM sync engine for my networking process. Instead of manually logging every meeting, I connected Google Calendar so attendee and meeting data from the past week flows automatically into my Notion Networking Hub. On a weekly scheduled trigger, n8n calls the Google Calendar API using OAuth credentials, pulls recent events, and extracts attendee details (name, email, and company when available) plus meeting metadata (title, date, and description). For each attendee, the workflow checks my Notion Contacts database to see whether the person already exists. If they exist, it updates the record; if not, it creates a new contact entry. In parallel, it creates or updates a corresponding record in my Notion Meetings database and links it back to the contact through a relation property. The full system runs every week without manual intervention. Hosting n8n on my own PikaPods instance keeps costs low and gives me full control over credentials and workflow logic while using secure OAuth access to Google Calendar and direct Notion API integration across both databases.",
     technologies: ["n8n", "PikaPods", "Google Calendar API", "OAuth", "Notion API", "CRM Automation"],

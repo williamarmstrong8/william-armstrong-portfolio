@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface BackLinkProps {
   href: string;
   label: string;
-  /** `pill` floats over content (sticky top bar); `plain` sits in a rail. */
+  /** `pill` has a bordered surface; `plain` sits in a rail. Positioning belongs to the page. */
   variant?: "pill" | "plain";
 }
 
@@ -24,7 +24,7 @@ export default function BackLink({ href, label, variant = "pill" }: BackLinkProp
           : "text-muted-foreground hover:text-foreground",
       )}
     >
-      <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
+      <ArrowLeft className="w-4 h-4 transition-transform duration-300 motion-safe:group-hover:-translate-x-0.5" />
       {label}
     </Link>
   );

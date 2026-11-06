@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import FilterBar from "@/components/FilterBar";
 import PageHeader from "@/components/PageHeader";
 import { ShowcaseCard } from "@/components/showcase/ShowcaseCard";
@@ -15,7 +15,7 @@ interface ProjectsClientProps {
 }
 
 const ProjectsClient = ({ projects }: ProjectsClientProps) => {
-  const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
   const [activeFilter, setActiveFilter] = useState("All");
   const isInitialMount = useRef(true);
   useEffect(() => {
@@ -34,16 +34,22 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
 
         <motion.section
           className="flex justify-center md:justify-end mb-12"
-          initial={fadeUp().initial}
+          initial={shouldReduceMotion ? false : fadeUp().initial}
           animate={fadeUp().animate}
-          transition={fadeUp().transition}
+          transition={shouldReduceMotion ? { duration: 0 } : fadeUp().transition}
         >
           <FilterBar
+            label="Project categories"
             tabs={["All", "Automations", "Apps & sites", "Hardware"]}
             activeFilter={activeFilter}
             onFilterChange={setActiveFilter}
           />
         </motion.section>
+
+        <p role="status" aria-live="polite" aria-atomic="true" className="mb-6 text-sm text-muted-foreground">
+          {filteredProjects.length} {filteredProjects.length === 1 ? "project" : "projects"}
+          {activeFilter === "All" ? " across all categories" : ` in ${activeFilter}`}
+        </p>
 
         {/* Projects Grid - animate out all cards on filter change, then new set animates in */}
         <AnimatePresence mode="wait">
@@ -51,36 +57,32 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
             <motion.section
               key={activeFilter}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              initial={{ opacity: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              exit={shouldReduceMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
             >
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
-                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -12, scale: 0.98, transition: { duration: 0.2 } }}
-                  transition={{
-                    duration: 0.4,
-                    delay: isInitialMount.current ? 0.47 + index * 0.1 : 0.13 + index * 0.053,
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                  }}
-                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                  {...(shouldReduceMotion
+                    ? { initial: false as const, animate: { opacity: 1, y: 0, scale: 1 }, transition: { duration: 0 } }
+                    : cardEntrance(index, isInitialMount.current))}
+                  whileHover={shouldReduceMotion ? undefined : cardHover}
                 >
                   <ShowcaseCard
                     title={project.title}
                     category={project.category}
                     description={project.description}
                     date={project.date}
+                    sizes="(min-width: 1024px) calc((100vw - 224px) / 3), (min-width: 768px) calc((100vw - 192px) / 2), calc(100vw - 32px)"
                     image={
                       project.thumbnail ||
                       (project.images && project.images.length > 0 ? project.images[0] : undefined)
                     }
                     ctaLabel="View Project"
                     cursorQuip={projectQuips[project.slug]}
-                    onClick={() => router.push(`/projects/${project.slug}`)}
+                    href={`/projects/${project.slug}`}
                   />
                 </motion.div>
               ))}
@@ -92,10 +94,10 @@ const ProjectsClient = ({ projects }: ProjectsClientProps) => {
           {filteredProjects.length === 0 && (
             <motion.div
               className="text-center py-16"
-              initial={{ opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={shouldReduceMotion ? undefined : { opacity: 0, y: -20 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
             >
               <p className="text-muted-foreground text-lg">
                 No projects found for the selected category.

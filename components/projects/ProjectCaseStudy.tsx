@@ -1,36 +1,41 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ExternalLink } from "lucide-react";
 import BackLink from "@/components/BackLink";
 import AutoImage from "./AutoImage";
+import VideoPlayer from "./VideoPlayer";
+import { PROJECT_VIDEO_METADATA } from "@/lib/projectVideoMetadata";
 import { buildMediaItems, type MediaItem } from "@/types/showcase";
-import { getProjectShape, type Project } from "@/data/projects";
+import { getProjectShape, projects, type Project } from "@/data/projects";
 
 function MediaView({
   item,
   alt,
   priority = false,
   capPortrait = true,
+  sizes,
 }: {
   item: MediaItem;
   alt: string;
   priority?: boolean;
   capPortrait?: boolean;
+  sizes?: string;
 }) {
   if (item.type === "video") {
+    const metadata = PROJECT_VIDEO_METADATA[item.src];
     return (
-      <div className="overflow-hidden border border-border bg-black">
-        <video
-          src={item.src}
-          poster={item.poster}
-          controls
-          playsInline
-          preload="metadata"
-          className="h-auto w-full"
-        />
-      </div>
+      <VideoPlayer
+        key={item.src}
+        src={item.src}
+        poster={metadata.poster}
+        title={alt}
+        width={metadata.width}
+        height={metadata.height}
+        capPortrait={capPortrait}
+      />
     );
   }
-  return <AutoImage src={item.src} alt={alt} priority={priority} capPortrait={capPortrait} />;
+  return <AutoImage src={item.src} alt={alt} priority={priority} capPortrait={capPortrait} sizes={sizes} />;
 }
 
 /** One image/video, or a balanced masonry when there are several. */
@@ -43,7 +48,12 @@ function Gallery({ items, altPrefix }: { items: MediaItem[]; altPrefix: string }
     <div className="columns-1 sm:columns-2 gap-4 [column-fill:_balance]">
       {items.map((item, index) => (
         <div key={`${item.src}-${index}`} className="mb-4 break-inside-avoid">
-          <MediaView item={item} alt={`${altPrefix} ${index + 1}`} capPortrait={false} />
+          <MediaView
+            item={item}
+            alt={`${altPrefix} ${index + 1}`}
+            capPortrait={false}
+            sizes="(min-width: 1184px) 504px, (min-width: 768px) calc((100vw - 176px) / 2), (min-width: 640px) calc((100vw - 48px) / 2), calc(100vw - 32px)"
+          />
         </div>
       ))}
     </div>
@@ -119,6 +129,61 @@ function ProcessList({ items }: { items: string[] }) {
   );
 }
 
+function ProjectNavigation({ slug }: { slug: string }) {
+  const index = projects.findIndex((project) => project.slug === slug);
+  if (index === -1 || projects.length < 2) return null;
+
+  const previous = projects[(index - 1 + projects.length) % projects.length];
+  const next = projects[(index + 1) % projects.length];
+  const adjacentProjects = [
+    { project: previous, label: "Previous project", Icon: ArrowLeft },
+    ...(next.slug !== previous.slug
+      ? [{ project: next, label: "Next project", Icon: ArrowRight }]
+      : []),
+  ];
+
+  return (
+    <nav
+      aria-label="Project navigation"
+      className="mt-20 md:mt-28 border-t border-border pt-10 grid grid-cols-1 md:grid-cols-2 gap-8"
+    >
+      {adjacentProjects.map(({ project, label, Icon }) => {
+        const image = project.thumbnail || project.images?.[0];
+
+        return (
+          <Link
+            key={project.slug}
+            href={`/projects/${project.slug}`}
+            aria-label={`${label}: ${project.title}`}
+            className="group block"
+          >
+            {image && (
+              <div className="relative aspect-video w-full overflow-hidden border border-border/80 bg-muted/20">
+                <Image
+                  src={image}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1184px) 496px, (min-width: 768px) calc((100vw - 192px) / 2), calc(100vw - 32px)"
+                  className="object-cover"
+                />
+              </div>
+            )}
+            <div className="mt-5 space-y-2">
+              <p className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                {label}
+              </p>
+              <h2 className="font-serif text-xl md:text-2xl font-medium leading-tight text-foreground transition-colors group-hover:text-nav-active group-focus-visible:text-nav-active">
+                {project.title}
+              </h2>
+            </div>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 interface ProjectCaseStudyProps {
   project: Project;
 }
@@ -128,7 +193,6 @@ export default function ProjectCaseStudy({ project }: ProjectCaseStudyProps) {
   const media = buildMediaItems({
     images: project.images,
     videos: project.videos,
-    videoPoster: project.videoPoster,
   });
   const hero = media[0] ?? null;
   const rest = media.slice(1);
@@ -155,7 +219,7 @@ export default function ProjectCaseStudy({ project }: ProjectCaseStudyProps) {
     <article className="min-h-svh bg-background text-foreground">
       <div className="px-4 md:px-20 pt-8 pb-20">
         <div className="max-w-5xl mx-auto">
-          <div className="sticky top-6 z-40 mb-10 w-fit">
+          <div className="mb-10 w-fit">
             <BackLink href="/projects" label="Back to Projects" />
           </div>
 
@@ -318,6 +382,8 @@ export default function ProjectCaseStudy({ project }: ProjectCaseStudyProps) {
               )}
             </footer>
           )}
+
+          <ProjectNavigation slug={project.slug} />
         </div>
       </div>
     </article>

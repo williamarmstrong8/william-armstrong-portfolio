@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import ContentCursor from "@/components/ui/ContentCursor";
+import MotionProvider from "@/components/MotionProvider";
 import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     title: "William Armstrong - Solutions Engineer & Entrepreneur",
     description:
       "Portfolio of William Armstrong: Solutions Engineer bridging product, engineering, and business with practical technical solutions.",
-    creator: "@williamarmstrong",
+    creator: "@armstrongships",
     images: ["/fav1.jpg"],
   },
   robots: { index: true, follow: true },
@@ -62,11 +63,13 @@ export default function RootLayout({
         <StructuredData type="website" />
       </head>
       <body className={`${inter.variable} ${merriweather.variable} font-sans`}>
-        <SmoothScroll />
-        <ContentCursor />
-        <Navigation />
-        {children}
-        <Footer />
+        <MotionProvider>
+          <SmoothScroll />
+          <ContentCursor />
+          <Navigation />
+          {children}
+          <Footer />
+        </MotionProvider>
         <Analytics />
       </body>
     </html>

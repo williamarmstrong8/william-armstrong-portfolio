@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -27,15 +33,19 @@ const Navigation = () => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  // Lock body scroll while sidebar is open
+  // Do not leave an invisible modal locking the page after a desktop resize.
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [isMenuOpen]);
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setIsMenuOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
+  const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
+  const desktopActiveClassName = "text-nav-active";
+  const mobileActiveClassName = "bg-nav-active/10 text-nav-active";
 
   return (
     <header className="w-full flex justify-between items-center px-4 md:px-8 pt-6 md:pt-8 pb-4 md:pb-2 relative">
@@ -52,114 +62,67 @@ const Navigation = () => {
         </Link>
       </div>
 
-      {/* Desktop Navigation */}
-      <nav className={`hidden md:flex items-center bg-nav/80 backdrop-blur-md px-2 py-2 left-1/2 transform -translate-x-1/2 top-6 z-50 ${isSlugPage ? "absolute" : "fixed"}`}>
+      {/* Desktop navigation only appears when all three header regions fit. */}
+      <nav aria-label="Main navigation" className={`hidden lg:flex items-center bg-nav/80 backdrop-blur-md px-2 py-2 left-1/2 -translate-x-1/2 top-6 z-50 ${isSlugPage ? "absolute" : "fixed"}`}>
         {navItems.map((item) => (
-          <Link key={item.name} href={item.path}>
-            <Button
-              variant="nav"
-              size="sm"
-              className={`mx-1 ${pathname === item.path ? "text-nav-active" : ""}`}
-            >
+          <Button key={item.path} asChild variant="nav" size="sm" className={`mx-1 ${isActive(item.path) ? desktopActiveClassName : ""}`}>
+            <Link href={item.path} aria-current={isActive(item.path) ? (pathname === item.path ? "page" : "location") : undefined}>
               {item.name}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         ))}
       </nav>
 
-      {/* Desktop Right Side */}
-      <div className="hidden md:flex items-center space-x-2">
-        <Link href="/contact">
-          <Button variant="connect" size="default">
-            Connect
-          </Button>
-        </Link>
+      <div className="hidden lg:flex items-center">
+        <Button asChild variant="connect">
+          <Link href="/contact" aria-current={pathname === "/contact" ? "page" : undefined}>Connect</Link>
+        </Button>
       </div>
 
-      {/* Mobile hamburger button */}
-      <div className="md:hidden">
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-2 touch-manipulation"
-          aria-label="Open menu"
-          aria-expanded={isMenuOpen}
+      <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <DialogTrigger asChild>
+          <button
+            type="button"
+            className="inline-flex lg:hidden min-h-11 min-w-11 items-center justify-center p-2 touch-manipulation"
+            aria-label="Open menu"
+          >
+            <Menu size={22} />
+          </button>
+        </DialogTrigger>
+        <DialogContent
+          aria-describedby={undefined}
+          className="left-auto right-0 top-0 h-dvh w-[78vw] max-w-[320px] translate-x-0 translate-y-0 bg-background border-l border-border flex flex-col data-[state=open]:animate-none data-[state=closed]:animate-none"
         >
-          <Menu size={22} />
-        </button>
-      </div>
-
-      {/* Mobile sidebar + backdrop */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsMenuOpen(false)}
-            />
-
-            {/* Sidebar panel */}
-            <motion.div
-              className="fixed top-0 right-0 h-full w-[78vw] max-w-[320px] bg-background border-l border-border z-50 flex flex-col md:hidden shadow-2xl"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 280 }}
-            >
-              {/* Sidebar header */}
-              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
-                  Menu
-                </span>
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-1.5 hover:bg-muted rounded-full transition-colors touch-manipulation"
-                  aria-label="Close menu"
+          <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
+            <DialogTitle className="text-xs text-muted-foreground uppercase tracking-widest">Menu</DialogTitle>
+            <DialogClose asChild>
+              <button type="button" className="inline-flex min-h-11 min-w-11 items-center justify-center hover:bg-muted transition-colors touch-manipulation" aria-label="Close menu">
+                <X size={20} />
+              </button>
+            </DialogClose>
+          </div>
+          <nav aria-label="Main navigation" className="flex flex-col px-3 py-5 gap-0.5 flex-1 min-h-0 overflow-y-auto">
+            {navItems.map((item) => (
+              <DialogClose key={item.path} asChild>
+                <Link
+                  href={item.path}
+                  aria-current={isActive(item.path) ? (pathname === item.path ? "page" : "location") : undefined}
+                  className={`flex items-center px-4 py-3.5 text-base font-medium transition-colors ${isActive(item.path) ? mobileActiveClassName : "text-foreground hover:bg-muted"}`}
                 >
-                  <X size={20} />
-                </button>
-              </div>
-
-              {/* Nav links */}
-              <nav className="flex flex-col px-3 py-5 gap-0.5 flex-1 overflow-y-auto">
-                {navItems.map((item, index) => (
-                  <motion.div
-                    key={item.name}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.06 + index * 0.05, duration: 0.2 }}
-                  >
-                    <Link
-                      href={item.path}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors ${
-                        pathname === item.path
-                          ? "bg-primary/10 text-primary"
-                          : "text-foreground hover:bg-muted"
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                ))}
-              </nav>
-
-              {/* Connect button pinned to bottom */}
-              <div className="px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-4 border-t border-border">
-                <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="connect" className="w-full">
-                    Connect
-                  </Button>
+                  {item.name}
                 </Link>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              </DialogClose>
+            ))}
+          </nav>
+          <div className="px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-4 border-t border-border">
+            <DialogClose asChild>
+              <Button asChild variant="connect" className="w-full">
+                <Link href="/contact" aria-current={pathname === "/contact" ? "page" : undefined}>Connect</Link>
+              </Button>
+            </DialogClose>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
